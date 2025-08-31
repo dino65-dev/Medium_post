@@ -218,7 +218,7 @@
 <body>
     <!-- Top Bar with Theme Toggle -->
     <div class="top-bar">
-        <a class="site-title" href="/">{{ site.title | default: "Mathematical Blog" }}</a>
+        <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title | default: "Mathematical Blog" }}</a>
         <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
             🌓 Toggle Theme
         </button>
@@ -243,7 +243,7 @@
                     <ul>
                         {% for page in filtered_root_pages %}
                             {% unless page.path contains '_' %}
-                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                <li><a href="{{ page.url | absolute_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
                             {% endunless %}
                         {% endfor %}
                     </ul>
@@ -286,7 +286,7 @@
                             <ul>
                                 {% for page in direct_folder_pages %}
                                     {% unless page.path contains '_' %}
-                                        <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                        <li><a href="{{ page.url | absolute_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
                                     {% endunless %}
                                 {% endfor %}
                             </ul>
@@ -313,7 +313,7 @@
                                     <ul class="nested">
                                         {% for page in subfolder_pages %}
                                             {% unless page.path contains '_' %}
-                                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                                <li><a href="{{ page.url | absolute_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
                                             {% endunless %}
                                         {% endfor %}
                                     </ul>
