@@ -494,7 +494,18 @@
 
         function toggleTOC() {
             const toc = document.getElementById('toc');
+            const container = document.getElementById('toc-container');
+            const icon = container.querySelector('.toc-icon');
+
             toc.classList.toggle('visible');
+
+            if (toc.classList.contains('visible')) {
+                container.classList.add('toc-expanded');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                container.classList.remove('toc-expanded');
+                icon.style.transform = 'rotate(0deg)';
+            }
         }
 
         function smoothScrollTo(id) {
@@ -636,6 +647,38 @@
             const style = document.createElement('style');
             style.textContent = printStyles;
             document.head.appendChild(style);
+        });
+
+        // Copy code block functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('.highlight');
+
+            codeBlocks.forEach(block => {
+                block.addEventListener('click', function(e) {
+                    // Only trigger if clicking on the copy button area (top-right)
+                    const rect = block.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    if (x > rect.width - 40 && y < 40) {
+                        e.preventDefault();
+                        const code = block.querySelector('code') || block.querySelector('pre');
+                        if (code) {
+                            const text = code.textContent || code.innerText;
+                            navigator.clipboard.writeText(text).then(() => {
+                                // Visual feedback
+                                const original = block.style.background;
+                                block.style.background = 'var(--hover-bg)';
+                                setTimeout(() => {
+                                    block.style.background = original;
+                                }, 200);
+                            }).catch(err => {
+                                console.error('Failed to copy: ', err);
+                            });
+                        }
+                    }
+                });
+            });
         });
     </script>
 </body>
