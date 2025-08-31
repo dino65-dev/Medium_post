@@ -15,7 +15,6 @@
             }
         };
     </script>
-
     <!-- Custom styles for sidebar -->
     <style>
         body {
@@ -23,12 +22,10 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
         }
-
         .container {
             display: flex;
             min-height: 100vh;
         }
-
         .sidebar {
             width: 280px;
             background-color: #f8f9fa;
@@ -37,204 +34,222 @@
             overflow-y: auto;
             position: fixed;
             height: 100vh;
-            left: 0;
-            top: 0;
-            box-sizing: border-box;
         }
-
         .main-content {
-            flex: 1;
             margin-left: 280px;
-            padding: 20px;
+            padding: 20px 40px;
+            flex: 1;
+            background-color: #ffffff;
         }
-
-        .sidebar h3 {
+        .category {
+            margin-bottom: 30px;
+        }
+        .category h3 {
             color: #0366d6;
+            font-size: 18px;
+            margin: 0 0 15px 0;
+            font-weight: 600;
             border-bottom: 2px solid #0366d6;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            margin-top: 0;
+            padding-bottom: 8px;
         }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar li {
-            margin-bottom: 5px;
-        }
-
-        .sidebar a {
+        .category h4 {
             color: #586069;
+            font-size: 14px;
+            margin: 15px 0 10px 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .category ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .category ul li {
+            margin: 8px 0;
+        }
+        .category ul li a {
+            color: #24292e;
             text-decoration: none;
-            padding: 5px 10px 5px 0;
+            font-size: 14px;
+            padding: 6px 12px;
             display: block;
-            border-radius: 3px;
+            border-radius: 6px;
             transition: all 0.2s ease;
         }
-
-        .sidebar a:hover {
-            color: #0366d6;
+        .category ul li a:hover {
             background-color: #f1f8ff;
-            padding-left: 10px;
+            color: #0366d6;
+            text-decoration: none;
         }
-
-        .category {
-            margin-bottom: 25px;
+        .nested {
+            margin-left: 20px;
         }
-
-        .subcategory {
-            margin-left: 15px;
-            margin-top: 10px;
-        }
-
-        .subcategory h4 {
-            color: #24292e;
-            font-size: 0.9em;
-            margin-bottom: 8px;
-            margin-top: 0;
-            font-weight: 600;
-        }
-
-        .subcategory ul {
-            margin-left: 10px;
-        }
-
-        .subcategory a {
-            font-size: 0.85em;
-            color: #6a737d;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: relative;
-                height: auto;
-                left: auto;
-                top: auto;
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
+        .page-title {
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar with Auto-Generated Navigation -->
         <nav class="sidebar">
-            <h3>{{ site.title | default: "Math Blog" }}</h3>
-
-            <!-- Mathematics Category -->
+            <!-- Mathematics Section -->
             <div class="category">
-                <h4><a href="{{ '/mathematics/' | relative_url }}">📊 Mathematics</a></h4>
-
-                <div class="subcategory">
-                    <h4>Algebra</h4>
+                <h3>📐 Mathematics</h3>
+                {% assign math_pages = site.pages | where_exp: "page", "page.path contains 'mathematics/'" | where_exp: "page", "page.path contains '.md'" %}
+                {% if math_pages.size > 0 %}
                     <ul>
-                        <li><a href="{{ '/mathematics/algebra/linear-algebra/' | relative_url }}">Linear Algebra</a></li>
-                        <li><a href="{{ '/mathematics/algebra/abstract-algebra/' | relative_url }}">Abstract Algebra</a></li>
-                        <li><a href="{{ '/mathematics/algebra/polynomial-equations/' | relative_url }}">Polynomial Equations</a></li>
+                        {% for page in math_pages %}
+                            {% unless page.path contains '_' %}
+                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                            {% endunless %}
+                        {% endfor %}
                     </ul>
-                </div>
-
-                <div class="subcategory">
-                    <h4>Calculus</h4>
-                    <ul>
-                        <li><a href="{{ '/mathematics/calculus/differential-calculus/' | relative_url }}">Differential Calculus</a></li>
-                        <li><a href="{{ '/mathematics/calculus/integral-calculus/' | relative_url }}">Integral Calculus</a></li>
-                        <li><a href="{{ '/mathematics/calculus/multivariable/' | relative_url }}">Multivariable Calculus</a></li>
-                    </ul>
-                </div>
-
-                <div class="subcategory">
-                    <h4>Statistics & Probability</h4>
-                    <ul>
-                        <li><a href="{{ '/mathematics/statistics/descriptive/' | relative_url }}">Descriptive Statistics</a></li>
-                        <li><a href="{{ '/mathematics/statistics/probability-theory/' | relative_url }}">Probability Theory</a></li>
-                        <li><a href="{{ '/mathematics/statistics/hypothesis-testing/' | relative_url }}">Hypothesis Testing</a></li>
-                    </ul>
-                </div>
-
-                <div class="subcategory">
-                    <h4>Discrete Mathematics</h4>
-                    <ul>
-                        <li><a href="{{ '/mathematics/discrete/graph-theory/' | relative_url }}">Graph Theory</a></li>
-                        <li><a href="{{ '/mathematics/discrete/combinatorics/' | relative_url }}">Combinatorics</a></li>
-                        <li><a href="{{ '/mathematics/discrete/number-theory/' | relative_url }}">Number Theory</a></li>
-                    </ul>
-                </div>
+                {% else %}
+                    <p style="font-size: 12px; color: #586069; margin: 10px 0;">No mathematics pages found</p>
+                {% endif %}
+                
+                <!-- Mathematics Subcategories -->
+                {% assign math_subcategories = site.pages | where_exp: "page", "page.path contains 'mathematics/'" | map: "path" | split: "/" | uniq %}
+                {% for subcat in math_subcategories %}
+                    {% if subcat contains 'mathematics' and subcat != 'mathematics' %}
+                        {% assign subcat_pages = site.pages | where_exp: "page", "page.path contains subcat" | where_exp: "page", "page.path contains '.md'" %}
+                        {% if subcat_pages.size > 0 %}
+                            <h4>{{ subcat | replace: 'mathematics/', '' | replace: '-', ' ' | capitalize }}</h4>
+                            <ul class="nested">
+                                {% for page in subcat_pages %}
+                                    {% unless page.path contains '_' %}
+                                        <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                    {% endunless %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
             </div>
-
-            <!-- Equations Category -->
+            
+            <!-- Equations Section -->
             <div class="category">
-                <h4><a href="{{ '/equations/' | relative_url }}">🧮 Equations</a></h4>
-
-                <div class="subcategory">
-                    <h4>Differential Equations</h4>
+                <h3>🧮 Equations</h3>
+                {% assign equation_pages = site.pages | where_exp: "page", "page.path contains 'equations/'" | where_exp: "page", "page.path contains '.md'" %}
+                {% if equation_pages.size > 0 %}
                     <ul>
-                        <li><a href="{{ '/equations/differential/ordinary/' | relative_url }}">Ordinary DE</a></li>
-                        <li><a href="{{ '/equations/differential/partial/' | relative_url }}">Partial DE</a></li>
-                        <li><a href="{{ '/equations/differential/systems/' | relative_url }}">Systems of DE</a></li>
+                        {% for page in equation_pages %}
+                            {% unless page.path contains '_' %}
+                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                            {% endunless %}
+                        {% endfor %}
                     </ul>
-                </div>
-
-                <div class="subcategory">
-                    <h4>Algebraic Equations</h4>
+                {% else %}
+                    <p style="font-size: 12px; color: #586069; margin: 10px 0;">No equation pages found</p>
+                {% endif %}
+                
+                <!-- Equations Subcategories -->
+                {% assign eq_dirs = '' %}
+                {% for page in site.pages %}
+                    {% if page.path contains 'equations/' and page.path contains '.md' %}
+                        {% assign path_parts = page.path | split: '/' %}
+                        {% for part in path_parts %}
+                            {% if forloop.index > 1 and part != page.name and part != '' %}
+                                {% unless eq_dirs contains part %}
+                                    {% assign eq_dirs = eq_dirs | append: part | append: ',' %}
+                                {% endunless %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+                
+                {% assign eq_dirs_array = eq_dirs | split: ',' | uniq %}
+                {% for subdir in eq_dirs_array %}
+                    {% if subdir != '' and subdir != 'equations' %}
+                        {% assign subdir_pages = site.pages | where_exp: "page", "page.path contains subdir" | where_exp: "page", "page.path contains '.md'" %}
+                        {% if subdir_pages.size > 0 %}
+                            <h4>{{ subdir | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h4>
+                            <ul class="nested">
+                                {% for page in subdir_pages %}
+                                    {% unless page.path contains '_' %}
+                                        <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                    {% endunless %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            <!-- Posts Section -->
+            <div class="category">
+                <h3>📝 Posts</h3>
+                {% assign post_pages = site.pages | where_exp: "page", "page.path contains 'posts/'" | where_exp: "page", "page.path contains '.md'" %}
+                {% if post_pages.size > 0 %}
                     <ul>
-                        <li><a href="{{ '/equations/algebraic/quadratic/' | relative_url }}">Quadratic Equations</a></li>
-                        <li><a href="{{ '/equations/algebraic/cubic/' | relative_url }}">Cubic Equations</a></li>
-                        <li><a href="{{ '/equations/algebraic/systems/' | relative_url }}">Systems of Equations</a></li>
+                        {% for page in post_pages %}
+                            {% unless page.path contains '_' %}
+                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                            {% endunless %}
+                        {% endfor %}
                     </ul>
-                </div>
-
-                <div class="subcategory">
-                    <h4>Special Functions</h4>
+                {% else %}
+                    <p style="font-size: 12px; color: #586069; margin: 10px 0;">No post pages found</p>
+                {% endif %}
+                
+                <!-- Posts Subcategories -->
+                {% assign post_dirs = '' %}
+                {% for page in site.pages %}
+                    {% if page.path contains 'posts/' and page.path contains '.md' %}
+                        {% assign path_parts = page.path | split: '/' %}
+                        {% for part in path_parts %}
+                            {% if forloop.index > 1 and part != page.name and part != '' %}
+                                {% unless post_dirs contains part %}
+                                    {% assign post_dirs = post_dirs | append: part | append: ',' %}
+                                {% endunless %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+                
+                {% assign post_dirs_array = post_dirs | split: ',' | uniq %}
+                {% for subdir in post_dirs_array %}
+                    {% if subdir != '' and subdir != 'posts' %}
+                        {% assign subdir_pages = site.pages | where_exp: "page", "page.path contains subdir" | where_exp: "page", "page.path contains '.md'" %}
+                        {% if subdir_pages.size > 0 %}
+                            <h4>{{ subdir | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h4>
+                            <ul class="nested">
+                                {% for page in subdir_pages %}
+                                    {% unless page.path contains '_' %}
+                                        <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                    {% endunless %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            <!-- Additional Pages (any other .md files) -->
+            <div class="category">
+                <h3>📄 Other Pages</h3>
+                {% assign other_pages = site.pages | where_exp: "page", "page.path contains '.md'" | where_exp: "page", "page.path != 'index.md'" %}
+                {% assign filtered_pages = '' | split: '' %}
+                {% for page in other_pages %}
+                    {% unless page.path contains 'mathematics/' or page.path contains 'equations/' or page.path contains 'posts/' or page.path contains '_' %}
+                        {% assign filtered_pages = filtered_pages | push: page %}
+                    {% endunless %}
+                {% endfor %}
+                
+                {% if filtered_pages.size > 0 %}
                     <ul>
-                        <li><a href="{{ '/equations/special/trigonometric/' | relative_url }}">Trigonometric</a></li>
-                        <li><a href="{{ '/equations/special/exponential/' | relative_url }}">Exponential & Log</a></li>
-                        <li><a href="{{ '/equations/special/hyperbolic/' | relative_url }}">Hyperbolic Functions</a></li>
+                        {% for page in filtered_pages %}
+                            <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                        {% endfor %}
                     </ul>
-                </div>
-            </div>
-
-            <!-- General Posts Category -->
-            <div class="category">
-                <h4><a href="{{ '/posts/' | relative_url }}">📝 General Posts</a></h4>
-                <ul>
-                    <li><a href="{{ '/posts/tutorials/' | relative_url }}">Tutorials</a></li>
-                    <li><a href="{{ '/posts/problem-solving/' | relative_url }}">Problem Solving</a></li>
-                    <li><a href="{{ '/posts/research/' | relative_url }}">Research Notes</a></li>
-                    <li><a href="{{ '/posts/applications/' | relative_url }}">Real-world Applications</a></li>
-                    <li><a href="{{ '/posts/book-reviews/' | relative_url }}">Book Reviews</a></li>
-                </ul>
-            </div>
-
-            <!-- Resources Category -->
-            <div class="category">
-                <h4><a href="{{ '/resources/' | relative_url }}">📚 Resources</a></h4>
-                <ul>
-                    <li><a href="{{ '/resources/cheat-sheets/' | relative_url }}">Cheat Sheets</a></li>
-                    <li><a href="{{ '/resources/formulas/' | relative_url }}">Formula Reference</a></li>
-                    <li><a href="{{ '/resources/tools/' | relative_url }}">Mathematical Tools</a></li>
-                    <li><a href="{{ '/resources/datasets/' | relative_url }}">Datasets</a></li>
-                </ul>
-            </div>
-
-            <!-- Archive -->
-            <div class="category">
-                <h4><a href="{{ '/archive/' | relative_url }}">📅 Archive</a></h4>
-                <ul>
-                    <li><a href="{{ '/archive/by-date/' | relative_url }}">By Date</a></li>
-                    <li><a href="{{ '/archive/by-topic/' | relative_url }}">By Topic</a></li>
-                    <li><a href="{{ '/archive/by-difficulty/' | relative_url }}">By Difficulty</a></li>
-                </ul>
+                {% else %}
+                    <p style="font-size: 12px; color: #586069; margin: 10px 0;">No other pages found</p>
+                {% endif %}
             </div>
         </nav>
-
+        
         <!-- Main Content Area -->
         <main class="main-content">
             {{ content }}
