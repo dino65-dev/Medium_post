@@ -5,16 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <!-- MathJax for math equations -->
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            }
-        };
-    </script>
+    
     <!-- Custom styles for sidebar -->
     <style>
         body {
@@ -37,182 +28,94 @@
         }
         .main-content {
             margin-left: 280px;
-            padding: 20px 40px;
+            padding: 40px;
             flex: 1;
-            background-color: #ffffff;
+            min-height: 100vh;
+        }
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #24292e;
+            font-weight: 600;
         }
         .category {
             margin-bottom: 30px;
         }
         .category h3 {
-            color: #0366d6;
-            font-size: 18px;
-            margin: 0 0 15px 0;
+            font-size: 16px;
             font-weight: 600;
-            border-bottom: 2px solid #0366d6;
-            padding-bottom: 8px;
+            margin: 15px 0 10px 0;
+            color: #586069;
+            border-bottom: 1px solid #e1e4e8;
+            padding-bottom: 5px;
         }
         .category h4 {
-            color: #586069;
             font-size: 14px;
-            margin: 15px 0 10px 0;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin: 12px 0 8px 0;
+            color: #0366d6;
         }
-        .category ul {
+        .sidebar ul {
             list-style: none;
             margin: 0;
             padding: 0;
         }
-        .category ul li {
-            margin: 8px 0;
+        .sidebar li {
+            margin-bottom: 5px;
         }
-        .category ul li a {
-            color: #24292e;
+        .sidebar a {
+            color: #586069;
             text-decoration: none;
             font-size: 14px;
-            padding: 6px 12px;
             display: block;
-            border-radius: 6px;
-            transition: all 0.2s ease;
+            padding: 3px 0;
+            transition: color 0.2s ease;
         }
-        .category ul li a:hover {
-            background-color: #f1f8ff;
+        .sidebar a:hover {
             color: #0366d6;
-            text-decoration: none;
+            text-decoration: underline;
         }
         .nested {
-            margin-left: 20px;
+            margin-left: 15px;
+            margin-top: 5px;
         }
-        .page-title {
-            font-weight: 500;
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e1e4e8;
+            }
+            .main-content {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar with Auto-Generated Navigation -->
         <nav class="sidebar">
-            <!-- Mathematics Section -->
-            <div class="category">
-                <h3>📐 Mathematics</h3>
-                {% assign math_pages = site.pages | where_exp: "page", "page.path contains 'mathematics/'" | where_exp: "page", "page.path contains '.md'" %}
-                {% if math_pages.size > 0 %}
-                    <ul>
-                        {% for page in math_pages %}
-                            {% unless page.path contains '_' %}
-                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
-                            {% endunless %}
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p style="font-size: 12px; color: #586069; margin: 10px 0;">No mathematics pages found</p>
-                {% endif %}
-                
-                <!-- Mathematics Subcategories -->
-                {% assign math_subcategories = site.pages | where_exp: "page", "page.path contains 'mathematics/'" | map: "path" | split: "/" | uniq %}
-                {% for subcat in math_subcategories %}
-                    {% if subcat contains 'mathematics' and subcat != 'mathematics' %}
-                        {% assign subcat_pages = site.pages | where_exp: "page", "page.path contains subcat" | where_exp: "page", "page.path contains '.md'" %}
-                        {% if subcat_pages.size > 0 %}
-                            <h4>{{ subcat | replace: 'mathematics/', '' | replace: '-', ' ' | capitalize }}</h4>
-                            <ul class="nested">
-                                {% for page in subcat_pages %}
-                                    {% unless page.path contains '_' %}
-                                        <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
-                                    {% endunless %}
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </div>
-            
-            <!-- Equations Section -->
-            <div class="category">
-                <h3>🧮 Equations</h3>
-                {% assign equation_pages = site.pages | where_exp: "page", "page.path contains 'equations/'" | where_exp: "page", "page.path contains '.md'" %}
-                {% if equation_pages.size > 0 %}
-                    <ul>
-                        {% for page in equation_pages %}
-                            {% unless page.path contains '_' %}
-                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
-                            {% endunless %}
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p style="font-size: 12px; color: #586069; margin: 10px 0;">No equation pages found</p>
-                {% endif %}
-                
-                <!-- Equations Subcategories -->
-                {% assign eq_dirs = '' %}
-                {% for page in site.pages %}
-                    {% if page.path contains 'equations/' and page.path contains '.md' %}
-                        {% assign path_parts = page.path | split: '/' %}
-                        {% for part in path_parts %}
-                            {% if forloop.index > 1 and part != page.name and part != '' %}
-                                {% unless eq_dirs contains part %}
-                                    {% assign eq_dirs = eq_dirs | append: part | append: ',' %}
-                                {% endunless %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
-                
-                {% assign eq_dirs_array = eq_dirs | split: ',' | uniq %}
-                {% for subdir in eq_dirs_array %}
-                    {% if subdir != '' and subdir != 'equations' %}
-                        {% assign subdir_pages = site.pages | where_exp: "page", "page.path contains subdir" | where_exp: "page", "page.path contains '.md'" %}
-                        {% if subdir_pages.size > 0 %}
-                            <h4>{{ subdir | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h4>
-                            <ul class="nested">
-                                {% for page in subdir_pages %}
-                                    {% unless page.path contains '_' %}
-                                        <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
-                                    {% endunless %}
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </div>
+            <h2>Navigation</h2>
             
             <!-- Posts Section -->
             <div class="category">
                 <h3>📝 Posts</h3>
-                {% assign post_pages = site.pages | where_exp: "page", "page.path contains 'posts/'" | where_exp: "page", "page.path contains '.md'" %}
-                {% if post_pages.size > 0 %}
-                    <ul>
-                        {% for page in post_pages %}
-                            {% unless page.path contains '_' %}
-                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
-                            {% endunless %}
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p style="font-size: 12px; color: #586069; margin: 10px 0;">No post pages found</p>
-                {% endif %}
-                
-                <!-- Posts Subcategories -->
-                {% assign post_dirs = '' %}
-                {% for page in site.pages %}
-                    {% if page.path contains 'posts/' and page.path contains '.md' %}
-                        {% assign path_parts = page.path | split: '/' %}
-                        {% for part in path_parts %}
-                            {% if forloop.index > 1 and part != page.name and part != '' %}
-                                {% unless post_dirs contains part %}
-                                    {% assign post_dirs = post_dirs | append: part | append: ',' %}
-                                {% endunless %}
-                            {% endif %}
-                        {% endfor %}
+                {% assign posts_pages = site.pages | where_exp: "page", "page.path contains 'posts/'" | where_exp: "page", "page.path contains '.md'" %}
+                {% assign posts_dirs = '' %}
+                {% for page in posts_pages %}
+                    {% assign path_parts = page.path | split: '/' %}
+                    {% if path_parts[1] != 'posts' %}
+                        {% assign posts_dirs = posts_dirs | append: path_parts[1] | append: ',' %}
                     {% endif %}
                 {% endfor %}
-                
-                {% assign post_dirs_array = post_dirs | split: ',' | uniq %}
-                {% for subdir in post_dirs_array %}
-                    {% if subdir != '' and subdir != 'posts' %}
-                        {% assign subdir_pages = site.pages | where_exp: "page", "page.path contains subdir" | where_exp: "page", "page.path contains '.md'" %}
+                {% assign posts_dirs_array = posts_dirs | split: ',' | uniq %}
+                {% for subdir in posts_dirs_array %}
+                    {% if subdir != '' %}
+                        {% assign subdir_pages = site.pages | where_exp: "page", "page.path contains subdir" | where_exp: "page", "page.path contains '.md'" | where_exp: "page", "page.path contains 'posts/'" %}
                         {% if subdir_pages.size > 0 %}
                             <h4>{{ subdir | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h4>
                             <ul class="nested">
@@ -225,15 +128,130 @@
                         {% endif %}
                     {% endif %}
                 {% endfor %}
+                
+                <!-- Direct posts in posts/ directory -->
+                {% assign direct_posts = site.pages | where_exp: "page", "page.path contains 'posts/'" | where_exp: "page", "page.path contains '.md'" %}
+                {% assign filtered_direct_posts = '' | split: '' %}
+                {% for page in direct_posts %}
+                    {% assign path_parts = page.path | split: '/' %}
+                    {% if path_parts.size == 2 and path_parts[0] == 'posts' %}
+                        {% assign filtered_direct_posts = filtered_direct_posts | push: page %}
+                    {% endif %}
+                {% endfor %}
+                {% if filtered_direct_posts.size > 0 %}
+                    <ul>
+                        {% for page in filtered_direct_posts %}
+                            {% unless page.path contains '_' %}
+                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                            {% endunless %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
             
-            <!-- Additional Pages (any other .md files) -->
+            <!-- Resources Section -->
+            <div class="category">
+                <h3>📚 Resources</h3>
+                {% assign resources_pages = site.pages | where_exp: "page", "page.path contains 'resources/'" | where_exp: "page", "page.path contains '.md'" %}
+                {% assign resources_dirs = '' %}
+                {% for page in resources_pages %}
+                    {% assign path_parts = page.path | split: '/' %}
+                    {% if path_parts[1] != 'resources' %}
+                        {% assign resources_dirs = resources_dirs | append: path_parts[1] | append: ',' %}
+                    {% endif %}
+                {% endfor %}
+                {% assign resources_dirs_array = resources_dirs | split: ',' | uniq %}
+                {% for subdir in resources_dirs_array %}
+                    {% if subdir != '' %}
+                        {% assign subdir_pages = site.pages | where_exp: "page", "page.path contains subdir" | where_exp: "page", "page.path contains '.md'" | where_exp: "page", "page.path contains 'resources/'" %}
+                        {% if subdir_pages.size > 0 %}
+                            <h4>{{ subdir | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h4>
+                            <ul class="nested">
+                                {% for page in subdir_pages %}
+                                    {% unless page.path contains '_' %}
+                                        <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                    {% endunless %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- Direct resources -->
+                {% assign direct_resources = site.pages | where_exp: "page", "page.path contains 'resources/'" | where_exp: "page", "page.path contains '.md'" %}
+                {% assign filtered_direct_resources = '' | split: '' %}
+                {% for page in direct_resources %}
+                    {% assign path_parts = page.path | split: '/' %}
+                    {% if path_parts.size == 2 and path_parts[0] == 'resources' %}
+                        {% assign filtered_direct_resources = filtered_direct_resources | push: page %}
+                    {% endif %}
+                {% endfor %}
+                {% if filtered_direct_resources.size > 0 %}
+                    <ul>
+                        {% for page in filtered_direct_resources %}
+                            {% unless page.path contains '_' %}
+                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                            {% endunless %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            
+            <!-- Archive Section -->
+            <div class="category">
+                <h3>📅 Archive</h3>
+                {% assign archive_pages = site.pages | where_exp: "page", "page.path contains 'archive/'" | where_exp: "page", "page.path contains '.md'" %}
+                {% assign archive_dirs = '' %}
+                {% for page in archive_pages %}
+                    {% assign path_parts = page.path | split: '/' %}
+                    {% if path_parts[1] != 'archive' %}
+                        {% assign archive_dirs = archive_dirs | append: path_parts[1] | append: ',' %}
+                    {% endif %}
+                {% endfor %}
+                {% assign archive_dirs_array = archive_dirs | split: ',' | uniq %}
+                {% for subdir in archive_dirs_array %}
+                    {% if subdir != '' %}
+                        {% assign subdir_pages = site.pages | where_exp: "page", "page.path contains subdir" | where_exp: "page", "page.path contains '.md'" | where_exp: "page", "page.path contains 'archive/'" %}
+                        {% if subdir_pages.size > 0 %}
+                            <h4>{{ subdir | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h4>
+                            <ul class="nested">
+                                {% for page in subdir_pages %}
+                                    {% unless page.path contains '_' %}
+                                        <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                    {% endunless %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                
+                <!-- Direct archive pages -->
+                {% assign direct_archive = site.pages | where_exp: "page", "page.path contains 'archive/'" | where_exp: "page", "page.path contains '.md'" %}
+                {% assign filtered_direct_archive = '' | split: '' %}
+                {% for page in direct_archive %}
+                    {% assign path_parts = page.path | split: '/' %}
+                    {% if path_parts.size == 2 and path_parts[0] == 'archive' %}
+                        {% assign filtered_direct_archive = filtered_direct_archive | push: page %}
+                    {% endif %}
+                {% endfor %}
+                {% if filtered_direct_archive.size > 0 %}
+                    <ul>
+                        {% for page in filtered_direct_archive %}
+                            {% unless page.path contains '_' %}
+                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                            {% endunless %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            
+            <!-- Other Pages Section -->
             <div class="category">
                 <h3>📄 Other Pages</h3>
                 {% assign other_pages = site.pages | where_exp: "page", "page.path contains '.md'" | where_exp: "page", "page.path != 'index.md'" %}
                 {% assign filtered_pages = '' | split: '' %}
                 {% for page in other_pages %}
-                    {% unless page.path contains 'mathematics/' or page.path contains 'equations/' or page.path contains 'posts/' or page.path contains '_' %}
+                    {% unless page.path contains 'posts/' or page.path contains 'resources/' or page.path contains 'archive/' or page.path contains '_' %}
                         {% assign filtered_pages = filtered_pages | push: page %}
                     {% endunless %}
                 {% endfor %}
