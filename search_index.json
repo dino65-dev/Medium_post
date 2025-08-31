@@ -1,0 +1,16 @@
+---
+layout: null
+---
+[
+  {% for page in site.pages %}
+    {% unless page.path contains '_' %}
+    {
+      "title": {{ page.title | default: page.name | remove: '.md' | jsonify }},
+      "content": {{ page.content | strip_html | strip_newlines | truncate: 500 | jsonify }},
+      "url": {{ page.url | jsonify }},
+      "category": {% if page.path contains '/' %}{{ page.path | split: '/' | first | jsonify }}{% else %}"root"{% endif %},
+      "tags": {% if page.tags %}{{ page.tags | jsonify }}{% else %}[{{ page.title | default: page.name | remove: '.md' | downcase | jsonify }}]{% endif %}
+    }{% unless forloop.last %},{% endunless %}
+    {% endunless %}
+  {% endfor %}
+]
