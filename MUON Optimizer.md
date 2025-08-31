@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Muon Optimizer
+permalink: /muon-optimizer/
 ---
 # Muon Optimizer — Complete Mathematical Derivation (LaTeX, Low-Level Up)
 
