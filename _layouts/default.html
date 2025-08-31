@@ -1,311 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-  <!-- MathJax for math equations -->
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      }
-    };
-  </script>
-  
-  <!-- Custom styles for sidebar -->
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
-    }
-    
-    .container {
-      display: flex;
-      min-height: 100vh;
-    }
-    
-    /* Sidebar toggle button */
-    .sidebar-toggle {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 1001;
-      background: #0366d6;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background-color 0.3s ease;
-    }
-    
-    .sidebar-toggle:hover {
-      background: #0256cc;
-    }
-    
-    /* Sidebar styles - off-canvas by default */
-    #sidebar {
-      width: 280px;
-      background-color: #f8f9fa;
-      border-right: 1px solid #e1e4e8;
-      padding: 20px;
-      overflow-y: auto;
-      position: fixed;
-      height: 100vh;
-      left: -280px;
-      top: 0;
-      z-index: 1000;
-      transition: left 0.3s ease;
-    }
-    
-    /* Sidebar open state */
-    #sidebar.open {
-      left: 0;
-    }
-    
-    /* Overlay */
-    .sidebar-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-      display: none;
-      transition: opacity 0.3s ease;
-    }
-    
-    .sidebar-overlay.show {
-      display: block;
-    }
-    
-    .main-content {
-      flex: 1;
-      padding: 20px;
-      margin-left: 0;
-      transition: margin-left 0.3s ease;
-    }
-    
-    .sidebar h3 {
-      color: #0366d6;
-      border-bottom: 2px solid #0366d6;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
-    }
-    
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    
-    .sidebar li {
-      margin-bottom: 5px;
-    }
-    
-    .sidebar a {
-      color: #586069;
-      text-decoration: none;
-      padding: 5px 0;
-      display: block;
-      border-radius: 3px;
-      transition: all 0.2s ease;
-    }
-    
-    .sidebar a:hover {
-      color: #0366d6;
-      background-color: #f1f8ff;
-      padding-left: 10px;
-    }
-    
-    .category {
-      margin-bottom: 25px;
-    }
-    
-    .subcategory {
-      margin-left: 15px;
-      margin-top: 10px;
-    }
-    
-    .subcategory h4 {
-      color: #24292e;
-      font-size: 0.9em;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-    
-    .subcategory ul {
-      margin-left: 10px;
-    }
-    
-    .subcategory a {
-      font-size: 0.85em;
-      color: #6a737d;
-    }
-    
-    @media (max-width: 768px) {
-      .sidebar-toggle {
-        display: block;
-      }
-      
-      #sidebar {
-        width: 100%;
-        left: -100%;
-      }
-      
-      #sidebar.open {
-        left: 0;
-      }
-      
-      .main-content {
-        margin-left: 0;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <!-- MathJax for math equations -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+
+    <!-- Custom styles for sidebar -->
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #e1e4e8;
+            padding: 20px 20px 20px 25px;
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            box-sizing: border-box;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 20px;
+        }
+
+        .sidebar h3 {
+            color: #0366d6;
+            border-bottom: 2px solid #0366d6;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar a {
+            color: #586069;
+            text-decoration: none;
+            padding: 5px 10px 5px 0;
+            display: block;
+            border-radius: 3px;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar a:hover {
+            color: #0366d6;
+            background-color: #f1f8ff;
+            padding-left: 10px;
+        }
+
+        .category {
+            margin-bottom: 25px;
+        }
+
+        .subcategory {
+            margin-left: 15px;
+            margin-top: 10px;
+        }
+
+        .subcategory h4 {
+            color: #24292e;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            margin-top: 0;
+            font-weight: 600;
+        }
+
+        .subcategory ul {
+            margin-left: 10px;
+        }
+
+        .subcategory a {
+            font-size: 0.85em;
+            color: #6a737d;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                left: auto;
+                top: auto;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- Sidebar toggle button -->
-  <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
-  
-  <!-- Sidebar overlay -->
-  <div id="sidebar-overlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
-  
-  <div class="container">
-    <!-- Sidebar Navigation -->
-    <div id="sidebar" class="sidebar">
-      <nav class="sidebar">
-        <h3>{{ site.title | default: "Math Blog" }}</h3>
-        
-        <!-- Mathematics Category -->
-        <div class="category">
-          <a href="{{ '/mathematics/' | relative_url }}">📊 Mathematics</a>
-          
-          <div class="subcategory">
-            <h4>Algebra</h4>
-            <ul>
-              <li><a href="{{ '/mathematics/algebra/linear-algebra/' | relative_url }}">Linear Algebra</a></li>
-              <li><a href="{{ '/mathematics/algebra/abstract-algebra/' | relative_url }}">Abstract Algebra</a></li>
-              <li><a href="{{ '/mathematics/algebra/polynomial-equations/' | relative_url }}">Polynomial Equations</a></li>
-            </ul>
-          </div>
-          
-          <div class="subcategory">
-            <h4>Calculus</h4>
-            <ul>
-              <li><a href="{{ '/mathematics/calculus/differential-calculus/' | relative_url }}">Differential Calculus</a></li>
-              <li><a href="{{ '/mathematics/calculus/integral-calculus/' | relative_url }}">Integral Calculus</a></li>
-              <li><a href="{{ '/mathematics/calculus/multivariable/' | relative_url }}">Multivariable Calculus</a></li>
-            </ul>
-          </div>
-          
-          <div class="subcategory">
-            <h4>Statistics & Probability</h4>
-            <ul>
-              <li><a href="{{ '/mathematics/statistics/descriptive/' | relative_url }}">Descriptive Statistics</a></li>
-              <li><a href="{{ '/mathematics/statistics/probability-theory/' | relative_url }}">Probability Theory</a></li>
-              <li><a href="{{ '/mathematics/statistics/hypothesis-testing/' | relative_url }}">Hypothesis Testing</a></li>
-            </ul>
-          </div>
-          
-          <div class="subcategory">
-            <h4>Discrete Mathematics</h4>
-            <ul>
-              <li><a href="{{ '/mathematics/discrete/graph-theory/' | relative_url }}">Graph Theory</a></li>
-              <li><a href="{{ '/mathematics/discrete/combinatorics/' | relative_url }}">Combinatorics</a></li>
-              <li><a href="{{ '/mathematics/discrete/number-theory/' | relative_url }}">Number Theory</a></li>
-            </ul>
-          </div>
-        </div>
-        
-        <!-- Equations Category -->
-        <div class="category">
-          <a href="{{ '/equations/' | relative_url }}">🧮 Equations</a>
-          
-          <div class="subcategory">
-            <h4>Differential Equations</h4>
-            <ul>
-              <li><a href="{{ '/equations/differential/ordinary/' | relative_url }}">Ordinary DE</a></li>
-              <li><a href="{{ '/equations/differential/partial/' | relative_url }}">Partial DE</a></li>
-              <li><a href="{{ '/equations/differential/systems/' | relative_url }}">Systems of DE</a></li>
-            </ul>
-          </div>
-          
-          <div class="subcategory">
-            <h4>Algebraic Equations</h4>
-            <ul>
-              <li><a href="{{ '/equations/algebraic/quadratic/' | relative_url }}">Quadratic Equations</a></li>
-              <li><a href="{{ '/equations/algebraic/cubic/' | relative_url }}">Cubic Equations</a></li>
-              <li><a href="{{ '/equations/algebraic/systems/' | relative_url }}">Systems of Equations</a></li>
-            </ul>
-          </div>
-          
-          <div class="subcategory">
-            <h4>Special Functions</h4>
-            <ul>
-              <li><a href="{{ '/equations/special/trigonometric/' | relative_url }}">Trigonometric</a></li>
-              <li><a href="{{ '/equations/special/exponential/' | relative_url }}">Exponential & Log</a></li>
-              <li><a href="{{ '/equations/special/hyperbolic/' | relative_url }}">Hyperbolic Functions</a></li>
-            </ul>
-          </div>
-        </div>
-        
-        <!-- General Posts Category -->
-        <div class="category">
-          <a href="{{ '/posts/' | relative_url }}">📝 General Posts</a>
-          <ul>
-            <li><a href="{{ '/posts/tutorials/' | relative_url }}">Tutorials</a></li>
-            <li><a href="{{ '/posts/problem-solving/' | relative_url }}">Problem Solving</a></li>
-            <li><a href="{{ '/posts/research/' | relative_url }}">Research Notes</a></li>
-            <li><a href="{{ '/posts/applications/' | relative_url }}">Real-world Applications</a></li>
-            <li><a href="{{ '/posts/book-reviews/' | relative_url }}">Book Reviews</a></li>
-          </ul>
-        </div>
-        
-        <!-- Resources Category -->
-        <div class="category">
-          <a href="{{ '/resources/' | relative_url }}">📚 Resources</a>
-          <ul>
-            <li><a href="{{ '/resources/cheat-sheets/' | relative_url }}">Cheat Sheets</a></li>
-            <li><a href="{{ '/resources/formulas/' | relative_url }}">Formula Reference</a></li>
-            <li><a href="{{ '/resources/tools/' | relative_url }}">Mathematical Tools</a></li>
-            <li><a href="{{ '/resources/datasets/' | relative_url }}">Datasets</a></li>
-          </ul>
-        </div>
-        
-        <!-- Archive -->
-        <div class="category">
-          <a href="{{ '/archive/' | relative_url }}">📅 Archive</a>
-          <ul>
-            <li><a href="{{ '/archive/by-date/' | relative_url }}">By Date</a></li>
-            <li><a href="{{ '/archive/by-topic/' | relative_url }}">By Topic</a></li>
-            <li><a href="{{ '/archive/by-difficulty/' | relative_url }}">By Difficulty</a></li>
-          </ul>
-        </div>
-      </nav>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <h3>{{ site.title | default: "Math Blog" }}</h3>
+
+            <!-- Mathematics Category -->
+            <div class="category">
+                <h4><a href="{{ '/mathematics/' | relative_url }}">📊 Mathematics</a></h4>
+
+                <div class="subcategory">
+                    <h4>Algebra</h4>
+                    <ul>
+                        <li><a href="{{ '/mathematics/algebra/linear-algebra/' | relative_url }}">Linear Algebra</a></li>
+                        <li><a href="{{ '/mathematics/algebra/abstract-algebra/' | relative_url }}">Abstract Algebra</a></li>
+                        <li><a href="{{ '/mathematics/algebra/polynomial-equations/' | relative_url }}">Polynomial Equations</a></li>
+                    </ul>
+                </div>
+
+                <div class="subcategory">
+                    <h4>Calculus</h4>
+                    <ul>
+                        <li><a href="{{ '/mathematics/calculus/differential-calculus/' | relative_url }}">Differential Calculus</a></li>
+                        <li><a href="{{ '/mathematics/calculus/integral-calculus/' | relative_url }}">Integral Calculus</a></li>
+                        <li><a href="{{ '/mathematics/calculus/multivariable/' | relative_url }}">Multivariable Calculus</a></li>
+                    </ul>
+                </div>
+
+                <div class="subcategory">
+                    <h4>Statistics & Probability</h4>
+                    <ul>
+                        <li><a href="{{ '/mathematics/statistics/descriptive/' | relative_url }}">Descriptive Statistics</a></li>
+                        <li><a href="{{ '/mathematics/statistics/probability-theory/' | relative_url }}">Probability Theory</a></li>
+                        <li><a href="{{ '/mathematics/statistics/hypothesis-testing/' | relative_url }}">Hypothesis Testing</a></li>
+                    </ul>
+                </div>
+
+                <div class="subcategory">
+                    <h4>Discrete Mathematics</h4>
+                    <ul>
+                        <li><a href="{{ '/mathematics/discrete/graph-theory/' | relative_url }}">Graph Theory</a></li>
+                        <li><a href="{{ '/mathematics/discrete/combinatorics/' | relative_url }}">Combinatorics</a></li>
+                        <li><a href="{{ '/mathematics/discrete/number-theory/' | relative_url }}">Number Theory</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Equations Category -->
+            <div class="category">
+                <h4><a href="{{ '/equations/' | relative_url }}">🧮 Equations</a></h4>
+
+                <div class="subcategory">
+                    <h4>Differential Equations</h4>
+                    <ul>
+                        <li><a href="{{ '/equations/differential/ordinary/' | relative_url }}">Ordinary DE</a></li>
+                        <li><a href="{{ '/equations/differential/partial/' | relative_url }}">Partial DE</a></li>
+                        <li><a href="{{ '/equations/differential/systems/' | relative_url }}">Systems of DE</a></li>
+                    </ul>
+                </div>
+
+                <div class="subcategory">
+                    <h4>Algebraic Equations</h4>
+                    <ul>
+                        <li><a href="{{ '/equations/algebraic/quadratic/' | relative_url }}">Quadratic Equations</a></li>
+                        <li><a href="{{ '/equations/algebraic/cubic/' | relative_url }}">Cubic Equations</a></li>
+                        <li><a href="{{ '/equations/algebraic/systems/' | relative_url }}">Systems of Equations</a></li>
+                    </ul>
+                </div>
+
+                <div class="subcategory">
+                    <h4>Special Functions</h4>
+                    <ul>
+                        <li><a href="{{ '/equations/special/trigonometric/' | relative_url }}">Trigonometric</a></li>
+                        <li><a href="{{ '/equations/special/exponential/' | relative_url }}">Exponential & Log</a></li>
+                        <li><a href="{{ '/equations/special/hyperbolic/' | relative_url }}">Hyperbolic Functions</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- General Posts Category -->
+            <div class="category">
+                <h4><a href="{{ '/posts/' | relative_url }}">📝 General Posts</a></h4>
+                <ul>
+                    <li><a href="{{ '/posts/tutorials/' | relative_url }}">Tutorials</a></li>
+                    <li><a href="{{ '/posts/problem-solving/' | relative_url }}">Problem Solving</a></li>
+                    <li><a href="{{ '/posts/research/' | relative_url }}">Research Notes</a></li>
+                    <li><a href="{{ '/posts/applications/' | relative_url }}">Real-world Applications</a></li>
+                    <li><a href="{{ '/posts/book-reviews/' | relative_url }}">Book Reviews</a></li>
+                </ul>
+            </div>
+
+            <!-- Resources Category -->
+            <div class="category">
+                <h4><a href="{{ '/resources/' | relative_url }}">📚 Resources</a></h4>
+                <ul>
+                    <li><a href="{{ '/resources/cheat-sheets/' | relative_url }}">Cheat Sheets</a></li>
+                    <li><a href="{{ '/resources/formulas/' | relative_url }}">Formula Reference</a></li>
+                    <li><a href="{{ '/resources/tools/' | relative_url }}">Mathematical Tools</a></li>
+                    <li><a href="{{ '/resources/datasets/' | relative_url }}">Datasets</a></li>
+                </ul>
+            </div>
+
+            <!-- Archive -->
+            <div class="category">
+                <h4><a href="{{ '/archive/' | relative_url }}">📅 Archive</a></h4>
+                <ul>
+                    <li><a href="{{ '/archive/by-date/' | relative_url }}">By Date</a></li>
+                    <li><a href="{{ '/archive/by-topic/' | relative_url }}">By Topic</a></li>
+                    <li><a href="{{ '/archive/by-difficulty/' | relative_url }}">By Difficulty</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            {{ content }}
+        </main>
     </div>
-    
-    <!-- Main Content Area -->
-    <main class="main-content">
-      {{ content }}
-    </main>
-  </div>
-  
-  <!-- JavaScript for sidebar toggle -->
-  <script>
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebar-overlay');
-      
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('show');
-    }
-  </script>
 </body>
 </html>
