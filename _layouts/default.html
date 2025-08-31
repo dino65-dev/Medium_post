@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
     <link rel="stylesheet" href="/assets/style.css">
     <!-- MathJax for math equations -->
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
         window.MathJax = {
             tex: {
@@ -16,6 +16,27 @@
             }
         };
     </script>
+    
+    <!-- Theme toggle functionality -->
+    <script>
+        // Initialize theme from localStorage or default to light
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        
+        // Toggle between light and dark themes
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+        
+        // Initialize theme immediately
+        initializeTheme();
+    </script>
+    
     <!-- Custom styles for sidebar -->
     <style>
         body {
@@ -23,62 +44,117 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
         }
+        
+        /* Top bar styles */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .site-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .theme-toggle {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+        }
+        
         .container {
             display: flex;
             min-height: 100vh;
+            padding-top: 60px; /* Account for fixed top bar */
         }
+        
         .sidebar {
             width: 320px;
-            background-color: #f8f9fa;
-            border-right: 1px solid #e1e4e8;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
             padding: 20px 30px 20px 30px;
             overflow-y: auto;
             overflow-x: visible;
             position: fixed;
-            height: 100vh;
+            height: calc(100vh - 60px);
             box-sizing: border-box;
+            top: 60px;
         }
+        
         .main-content {
             margin-left: 320px;
             padding: 40px;
             flex: 1;
-            min-height: 100vh;
+            min-height: calc(100vh - 60px);
+            background: var(--bg-primary);
+            color: var(--text-primary);
         }
+        
         .sidebar h2 {
             font-size: 20px;
             margin-bottom: 20px;
-            color: #24292e;
+            color: var(--text-primary);
             font-weight: 600;
         }
+        
         .category {
             margin-bottom: 30px;
         }
+        
         .category h3 {
             font-size: 16px;
             font-weight: 600;
             margin: 15px 0 10px 0;
-            color: #586069;
-            border-bottom: 1px solid #e1e4e8;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
             padding-bottom: 5px;
         }
+        
         .category h4 {
             font-size: 14px;
             font-weight: 600;
             margin: 12px 0 8px 0;
-            color: #0366d6;
+            color: var(--accent-color);
         }
+        
         .sidebar ul {
             list-style: none;
             margin: 0;
             padding: 0;
         }
+        
         .sidebar li {
             margin-bottom: 5px;
             overflow: visible;
             white-space: nowrap;
         }
+        
         .sidebar a {
-            color: #586069;
+            color: var(--text-secondary);
             text-decoration: none;
             font-size: 14px;
             display: block;
@@ -88,14 +164,17 @@
             text-overflow: clip;
             white-space: nowrap;
         }
+        
         .sidebar a:hover {
-            color: #0366d6;
+            color: var(--accent-color);
             text-decoration: underline;
         }
+        
         .nested {
             margin-left: 15px;
             margin-top: 5px;
         }
+        
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -105,7 +184,7 @@
                 position: static;
                 height: auto;
                 border-right: none;
-                border-bottom: 1px solid #e1e4e8;
+                border-bottom: 1px solid var(--border-color);
                 padding: 20px 15px;
             }
             .main-content {
@@ -115,6 +194,14 @@
     </style>
 </head>
 <body>
+    <!-- Top Bar with Theme Toggle -->
+    <div class="top-bar">
+        <a href="/" class="site-title">{{ site.title | default: "Mathematical Blog" }}</a>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+            🌓 Toggle Theme
+        </button>
+    </div>
+    
     <div class="container">
         <nav class="sidebar">
             <h2>📖 Navigation</h2>
@@ -139,7 +226,7 @@
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p style="font-size: 12px; color: #586069; margin: 10px 0;">No root pages found</p>
+                    <p style="font-size: 12px; color: var(--text-secondary); margin: 10px 0;">No root pages found</p>
                 {% endif %}
             </div>
             
