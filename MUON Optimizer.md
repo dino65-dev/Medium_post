@@ -1,3 +1,7 @@
+---
+layout: default
+title: Muon Optimizer
+---
 # Muon Optimizer — Complete Mathematical Derivation (LaTeX, Low-Level Up)
 
 This writeup walks step-by-step from basic matrix calculus to Muon’s core update, deriving everything with no skipped steps. No Adam/optimizer background needed.
