@@ -4,17 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
-    <link r            <div class="search-container">
-                <input type="text" id="search-input" placeholder="🔍 Search posts..." />
-                <div id="search-filters" class="search-filters">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="content">Content</button>
-                    <button class="filter-btn" data-filter="title">Titles</button>
-                    <button class="filter-btn" data-filter="category">Categories</button>
-                </div>
-                <div id="search-results" class="search-results"></div>
-            </div>stylesheet" href="/assets/style.css" />
+    <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}" />
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#6c63ff" />
@@ -140,65 +130,6 @@
         #search-input:focus {
             outline: none;
             border-color: var(--accent-color);
-        }
-
-        .search-filters {
-            display: none;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-            padding: 8px;
-            background: var(--bg-secondary);
-            border-radius: 6px;
-        }
-
-        .search-container.search-active .search-filters {
-            display: flex;
-        }
-
-        .filter-btn {
-            padding: 4px 12px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .filter-btn:hover,
-        .filter-btn.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .search-result-item {
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--border-color);
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .search-result-item:hover {
-            background: var(--bg-secondary);
-        }
-
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-
-        .search-result-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .search-result-excerpt {
-            font-size: 12px;
-            color: var(--text-secondary);
-            line-height: 1.4;
         }
 
         .site-title {
@@ -357,7 +288,7 @@
         <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title | default: "Mathematical Blog" }}</a>
         <div class="top-bar-right">
             <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search posts..." />
+                <input type="text" id="search-input" placeholder="🔍 Search posts..." />
                 <div id="search-results" class="search-results"></div>
             </div>
             <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">

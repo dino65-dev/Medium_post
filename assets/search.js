@@ -12,6 +12,13 @@ let currentFilter = 'all';
 
 // Initialize search when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Enable search input by default
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.disabled = false;
+        searchInput.placeholder = '🔍 Search posts...';
+    }
+
     initializeSearch();
     initializeFilters();
 });
@@ -112,6 +119,8 @@ function initializeFilters() {
         });
     }
 }
+
+function buildSearchIndexFromCurrentPage() {
     // Fallback: extract content from current page
     const documents = [];
 
