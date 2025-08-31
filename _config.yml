@@ -1,7 +1,8 @@
 title: "Medium Blog"
 description: "A Jekyll-powered, math-enabled blog for medium-style posts"
-baseurl: "" # or "/repo-name" if using a project site
-url: ""     # GitHub Pages will fill this in
+baseurl: "/Medium_post"               # must start with a slash, no trailing slash
+url: "https://dino65-dev.github.io"   # no trailing slash
+permalink: pretty
 
 markdown: kramdown
 theme: minima
