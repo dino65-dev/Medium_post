@@ -46,23 +46,29 @@ function setupSearch(documents) {
             this.field('category', { boost: 5 });
             this.field('tags', { boost: 3 });
             this.field('url', { boost: 2 });
-            
+
             documents.forEach(function(doc, idx) {
                 doc.id = idx;
                 this.add(doc);
             }.bind(this));
         });
-        
+
         searchDocuments = documents;
         searchInitialized = true;
-        
+
         // Enable search input
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
             searchInput.disabled = false;
             searchInput.placeholder = '🔍 Search posts and content...';
+            searchInput.addEventListener('input', handleSearchInput);
+            searchInput.addEventListener('focus', () => {
+                if (searchInput.value.length >= 2) {
+                    handleSearchInput({ target: searchInput });
+                }
+            });
         }
-        
+
         console.log(`Search initialized with ${documents.length} documents`);
     } catch (error) {
         console.error('Error setting up search:', error);
@@ -72,13 +78,13 @@ function setupSearch(documents) {
 function buildSearchIndexFromCurrentPage() {
     // Fallback: extract content from current page
     const documents = [];
-    
+
     // Extract from sidebar links
     const sidebarLinks = document.querySelectorAll('.sidebar a');
     sidebarLinks.forEach((link, idx) => {
         const title = link.textContent.trim();
         const url = link.href;
-        
+
         if (title && url && !url.includes('#')) {
             documents.push({
                 id: idx,
@@ -90,7 +96,7 @@ function buildSearchIndexFromCurrentPage() {
             });
         }
     });
-    
+
     // Extract from main content
     const mainContent = document.querySelector('.main-content');
     if (mainContent) {
@@ -98,7 +104,7 @@ function buildSearchIndexFromCurrentPage() {
         headings.forEach((heading, idx) => {
             const title = heading.textContent.trim();
             const content = getHeadingContext(heading);
-            
+
             if (title) {
                 documents.push({
                     id: documents.length,
@@ -111,7 +117,7 @@ function buildSearchIndexFromCurrentPage() {
             }
         });
     }
-    
+
     if (documents.length > 0) {
         setupSearch(documents);
     } else {
@@ -128,7 +134,7 @@ function extractCategoryFromUrl(url) {
 function getHeadingContext(heading) {
     let content = heading.textContent;
     let nextElement = heading.nextElementSibling;
-    
+
     // Get next paragraph or two for context
     let contextCount = 0;
     while (nextElement && contextCount < 2) {
@@ -140,7 +146,7 @@ function getHeadingContext(heading) {
         }
         nextElement = nextElement.nextElementSibling;
     }
-    
+
     return content;
 }
 
@@ -148,7 +154,7 @@ function performSearch(query) {
     if (!searchInitialized || !query.trim()) {
         return [];
     }
-    
+
     try {
         const results = searchIndex.search(query);
         return results.map(result => {
@@ -167,7 +173,7 @@ function performSearch(query) {
 function displaySearchResults(results, query) {
     const searchResults = document.getElementById('search-results');
     if (!searchResults) return;
-    
+
     if (results.length === 0) {
         searchResults.innerHTML = `
             <div class="search-no-results">
@@ -177,7 +183,7 @@ function displaySearchResults(results, query) {
         `;
         return;
     }
-    
+
     const resultsHtml = results.map(result => {
         const snippet = createSearchSnippet(result.content, query);
         return `
@@ -191,7 +197,7 @@ function displaySearchResults(results, query) {
             </div>
         `;
     }).join('');
-    
+
     searchResults.innerHTML = `
         <div class="search-results-header">
             <h3>Search Results (${results.length})</h3>
@@ -206,15 +212,15 @@ function displaySearchResults(results, query) {
 function createSearchSnippet(content, query) {
     const words = query.toLowerCase().split(' ').filter(w => w.length > 0);
     let snippet = content;
-    
+
     // Find the best match position
     let bestPos = 0;
     let bestScore = 0;
-    
+
     words.forEach(word => {
         const pos = content.toLowerCase().indexOf(word);
         if (pos !== -1) {
-            const score = words.filter(w => 
+            const score = words.filter(w =>
                 content.toLowerCase().substring(Math.max(0, pos - 50), pos + 50).includes(w)
             ).length;
             if (score > bestScore) {
@@ -223,40 +229,40 @@ function createSearchSnippet(content, query) {
             }
         }
     });
-    
+
     // Extract snippet around best match
     const start = Math.max(0, bestPos - 75);
     const end = Math.min(content.length, bestPos + 75);
     snippet = content.substring(start, end);
-    
+
     if (start > 0) snippet = '...' + snippet;
     if (end < content.length) snippet = snippet + '...';
-    
+
     // Highlight search terms
     words.forEach(word => {
         const regex = new RegExp(`(${escapeRegExp(word)})`, 'gi');
         snippet = snippet.replace(regex, '<mark>$1</mark>');
     });
-    
+
     return snippet;
 }
 
 function handleSearchInput(event) {
     const query = event.target.value;
     const searchResults = document.getElementById('search-results');
-    
+
     if (query.length < 2) {
         searchResults.style.display = 'none';
         return;
     }
-    
+
     searchResults.style.display = 'block';
-    
+
     if (!searchInitialized) {
         searchResults.innerHTML = '<div class="search-loading">Loading search index...</div>';
         return;
     }
-    
+
     const results = performSearch(query);
     displaySearchResults(results, query);
 }
@@ -264,7 +270,7 @@ function handleSearchInput(event) {
 function clearSearch() {
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
-    
+
     if (searchInput) searchInput.value = '';
     if (searchResults) {
         searchResults.style.display = 'none';
@@ -293,7 +299,7 @@ document.addEventListener('keydown', function(event) {
             searchInput.focus();
         }
     }
-    
+
     // Escape to clear search
     if (event.key === 'Escape') {
         clearSearch();

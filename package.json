@@ -1,0 +1,19 @@
+{
+  "name": "medium-post",
+  "version": "1.0.0",
+  "description": "Jekyll-powered mathematical blog with advanced features",
+  "scripts": {
+    "generate-search": "node generate_search_index.js",
+    "build": "npm run generate-search && jekyll build",
+    "serve": "npm run generate-search && jekyll serve"
+  },
+  "keywords": [
+    "jekyll",
+    "blog",
+    "mathematics",
+    "github-pages",
+    "mathjax"
+  ],
+  "author": "Dinmay Kumar Brahma",
+  "license": "MIT"
+}

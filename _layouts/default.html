@@ -16,7 +16,10 @@
             }
         };
     </script>
-    
+    <!-- Lunr.js for search -->
+    <script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
+    <script src="{{ '/assets/search.js' | relative_url }}"></script>
+
     <!-- Theme toggle functionality -->
     <script>
         // Initialize theme from localStorage or default to light
@@ -24,7 +27,7 @@
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
-        
+
         // Toggle between light and dark themes
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -32,11 +35,11 @@
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         }
-        
+
         // Initialize theme immediately
         initializeTheme();
     </script>
-    
+
     <!-- Custom styles for sidebar -->
     <style>
         /* CSS Variables for theme support */
@@ -48,7 +51,7 @@
             --border-color: #e1e4e8;
             --accent-color: #6c63ff;
         }
-        
+
         :root[data-theme="dark"] {
             --bg-primary: #0d1117;
             --bg-secondary: #161b22;
@@ -57,7 +60,7 @@
             --border-color: #30363d;
             --accent-color: #7c3aed;
         }
-        
+
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -66,7 +69,7 @@
             color: var(--text-primary);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-        
+
         /* Top bar styles */
         .top-bar {
             position: fixed;
@@ -83,14 +86,84 @@
             z-index: 1000;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        #search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1001;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-result-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .search-result-excerpt {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
         .site-title {
             font-size: 20px;
             font-weight: 600;
             color: var(--text-primary);
             text-decoration: none;
         }
-        
+
         .theme-toggle {
             background: var(--accent-color);
             color: white;
@@ -102,18 +175,18 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
-        
+
         .theme-toggle:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
         }
-        
+
         .container {
             display: flex;
             min-height: 100vh;
             padding-top: 60px; /* Account for fixed top bar */
         }
-        
+
         .sidebar {
             width: 320px;
             background-color: var(--bg-secondary);
@@ -126,7 +199,7 @@
             box-sizing: border-box;
             top: 60px;
         }
-        
+
         .main-content {
             margin-left: 320px;
             padding: 40px;
@@ -135,18 +208,18 @@
             background: var(--bg-primary);
             color: var(--text-primary);
         }
-        
+
         .sidebar h2 {
             font-size: 20px;
             margin-bottom: 20px;
             color: var(--text-primary);
             font-weight: 600;
         }
-        
+
         .category {
             margin-bottom: 30px;
         }
-        
+
         .category h3 {
             font-size: 16px;
             font-weight: 600;
@@ -155,26 +228,26 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 5px;
         }
-        
+
         .category h4 {
             font-size: 14px;
             font-weight: 600;
             margin: 12px 0 8px 0;
             color: var(--accent-color);
         }
-        
+
         .sidebar ul {
             list-style: none;
             margin: 0;
             padding: 0;
         }
-        
+
         .sidebar li {
             margin-bottom: 5px;
             overflow: visible;
             white-space: nowrap;
         }
-        
+
         .sidebar a {
             color: var(--text-secondary);
             text-decoration: none;
@@ -186,18 +259,37 @@
             text-overflow: clip;
             white-space: nowrap;
         }
-        
+
         .sidebar a:hover {
             color: var(--accent-color);
             text-decoration: underline;
         }
-        
+
         .nested {
             margin-left: 15px;
             margin-top: 5px;
         }
-        
+
         @media (max-width: 768px) {
+            .top-bar {
+                padding: 0 15px;
+                height: auto;
+                flex-direction: column;
+                gap: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            .top-bar-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .search-container {
+                max-width: none;
+                flex: 1;
+            }
+
             .container {
                 flex-direction: column;
             }
@@ -219,15 +311,21 @@
     <!-- Top Bar with Theme Toggle -->
     <div class="top-bar">
         <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title | default: "Mathematical Blog" }}</a>
-        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
-            🌓 Toggle Theme
-        </button>
+        <div class="top-bar-right">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search posts..." />
+                <div id="search-results" class="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+                🌓 Toggle Theme
+            </button>
+        </div>
     </div>
-    
+
     <div class="container">
         <nav class="sidebar">
             <h2>📖 Navigation</h2>
-            
+
             <!-- Root .md files -->
             <div class="category">
                 <h3>📄 Root Pages</h3>
@@ -251,7 +349,7 @@
                     <p style="font-size: 12px; color: var(--text-secondary); margin: 10px 0;">No root pages found</p>
                 {% endif %}
             </div>
-            
+
             <!-- Dynamic folder listing -->
             {% assign all_pages = site.pages | where_exp: "page", "page.path contains '.md'" %}
             {% assign folders = '' %}
@@ -265,15 +363,15 @@
                 {% endif %}
             {% endfor %}
             {% assign folders_array = folders | split: ',' | uniq %}
-            
+
             {% for folder in folders_array %}
                 {% if folder != '' and folder != '_layouts' and folder != '_includes' and folder != '_sass' and folder != '_site' %}
                     <div class="category">
                         <h3>📁 {{ folder | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h3>
-                        
+
                         <!-- Get all pages in this folder -->
                         {% assign folder_pages = site.pages | where_exp: "page", "page.path contains folder" | where_exp: "page", "page.path contains '.md'" %}
-                        
+
                         <!-- Direct files in folder -->
                         {% assign direct_folder_pages = '' | split: '' %}
                         {% for page in folder_pages %}
@@ -291,7 +389,7 @@
                                 {% endfor %}
                             </ul>
                         {% endif %}
-                        
+
                         <!-- Subfolders in this folder -->
                         {% assign subfolders = '' %}
                         {% for page in folder_pages %}
@@ -304,7 +402,7 @@
                             {% endif %}
                         {% endfor %}
                         {% assign subfolders_array = subfolders | split: ',' | uniq %}
-                        
+
                         {% for subfolder in subfolders_array %}
                             {% if subfolder != '' %}
                                 {% assign subfolder_pages = site.pages | where_exp: "page", "page.path contains subfolder" | where_exp: "page", "page.path contains '.md'" | where_exp: "page", "page.path contains folder" %}
@@ -324,7 +422,7 @@
                 {% endif %}
             {% endfor %}
         </nav>
-        
+
         <!-- Main Content Area -->
         <main class="main-content">
             {{ content }}

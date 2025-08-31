@@ -5,6 +5,12 @@ url: "https://dino65-dev.github.io"   # no trailing slash
 permalink: pretty
 
 markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  math_engine: mathjax
+
 theme: minima
 
 plugins:
@@ -15,5 +21,44 @@ plugins:
 
 paginate: 10
 paginate_path: "/page:num/"
+
+# Syntax highlighting
+syntax_highlighter: rouge
+
+# MathJax configuration
+mathjax: true
+mathjax_autoNumber: "AMS"
+
+# SEO and social
+author: "Dinmay Kumar Brahma"
+twitter:
+  username: dinmaybrahma
+social:
+  name: Dinmay Kumar Brahma
+  links:
+    - https://github.com/dino65-dev
+    - https://www.linkedin.com/in/dinmay-brahma-4882aa189
+    - https://medium.com/@dinmaybrahma
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /:collection/:name/
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  - .bundle/
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - .bundle
+
+# Include files
+include:
+  - _pages
 
 # Keep it simple for now—add features later!
