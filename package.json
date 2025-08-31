@@ -1,19 +1,38 @@
 {
   "name": "medium-post",
-  "version": "1.0.0",
-  "description": "Jekyll-powered mathematical blog with advanced features",
+  "version": "2.0.0",
+  "description": "Advanced Jekyll-powered mathematical blog with PWA features",
   "scripts": {
     "generate-search": "node generate_search_index.js",
     "build": "npm run generate-search && jekyll build",
-    "serve": "npm run generate-search && jekyll serve"
+    "serve": "npm run generate-search && jekyll serve",
+    "serve:prod": "npm run generate-search && jekyll serve --config _config.yml",
+    "clean": "rm -rf _site && rm -rf .jekyll-cache",
+    "analytics:clear": "echo 'Run: window.analytics.clearAnalytics() in browser console'",
+    "test": "echo 'No tests specified yet'"
   },
   "keywords": [
     "jekyll",
     "blog",
     "mathematics",
     "github-pages",
-    "mathjax"
+    "mathjax",
+    "pwa",
+    "progressive-web-app",
+    "lunr",
+    "search"
   ],
   "author": "Dinmay Kumar Brahma",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dino65-dev/Medium_post"
+  },
+  "bugs": {
+    "url": "https://github.com/dino65-dev/Medium_post/issues"
+  },
+  "homepage": "https://dino65-dev.github.io/Medium_post"
 }

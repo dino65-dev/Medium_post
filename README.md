@@ -94,28 +94,69 @@ permalink: /your-post-url/
 ---
 ```
 
-## 🎨 Customization
+## 🚀 Advanced Features
 
-### Colors and Styling
+### Progressive Web App (PWA)
+- **Offline Support**: Service worker caches essential resources
+- **Installable**: Add to home screen on mobile devices
+- **Fast Loading**: Cached resources for instant loading
 
-Edit `assets/style.css` to customize the appearance. The site uses CSS custom properties for easy theming.
+### Enhanced Search
+- **Advanced Filtering**: Filter by content, titles, or categories
+- **Real-time Results**: Instant search with highlighting
+- **Keyboard Shortcuts**: `Ctrl+K` to focus search, `Ctrl+T` for TOC
 
-### Layout
+### Reading Experience
+- **Reading Progress**: Visual progress bar at the top
+- **Table of Contents**: Auto-generated TOC for long posts
+- **Back to Top**: Smooth scroll to top button
+- **Print Optimization**: Clean print styles
 
-Modify `_layouts/default.html` to change the overall site structure.
+### Code Features
+- **Copy to Clipboard**: One-click code copying
+- **Line Numbers**: Automatic line numbers for long code blocks
+- **Syntax Highlighting**: Enhanced code syntax highlighting
 
-## 🤝 Contributing
+### Social & Sharing
+- **Social Buttons**: Share on Twitter, LinkedIn, Facebook
+- **Copy Link**: Easy link copying with feedback
+- **SEO Optimized**: Meta tags and structured data
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test locally
-5. Submit a pull request
+### Analytics (Privacy-Focused)
+- **Local Analytics**: Privacy-respecting, client-side tracking
+- **Reading Metrics**: Time spent, scroll depth tracking
+- **No External Tracking**: All data stays on user's device
 
-## 📄 License
+### Accessibility
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Screen Reader Support**: ARIA labels and semantic HTML
+- **High Contrast**: Support for high contrast mode
+- **Reduced Motion**: Respects user's motion preferences
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+### Performance
+- **Lazy Loading**: Images load as they enter viewport
+- **Optimized Fonts**: Efficient font loading
+- **Minimal Dependencies**: Only essential external scripts
 
----
+## 🎯 Keyboard Shortcuts
 
-*This repository structure enables efficient organization and navigation of mathematical content with a focus on equations, proofs, and educational materials.*
+- `Ctrl/Cmd + K`: Focus search bar
+- `Ctrl/Cmd + T`: Toggle table of contents
+- `Escape`: Close search results
+- `Ctrl/Cmd + P`: Print page
+
+## 📱 Mobile Features
+
+- **Responsive Design**: Optimized for all screen sizes
+- **Touch Gestures**: Swipe-friendly navigation
+- **PWA Support**: Install as mobile app
+- **Fast Touch Targets**: Easy interaction on mobile
+
+## 🔧 Technical Stack
+
+- **Static Generation**: Jekyll for fast builds
+- **Search Engine**: Lunr.js for client-side search
+- **PWA**: Service Worker for offline functionality
+- **Icons**: Inline SVG for crisp icons
+- **Analytics**: Custom privacy-focused tracking
+- **Performance**: Optimized loading and caching

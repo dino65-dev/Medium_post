@@ -8,10 +8,12 @@
 let searchIndex;
 let searchDocuments;
 let searchInitialized = false;
+let currentFilter = 'all';
 
 // Initialize search when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeSearch();
+    initializeFilters();
 });
 
 function initializeSearch() {
@@ -75,7 +77,41 @@ function setupSearch(documents) {
     }
 }
 
-function buildSearchIndexFromCurrentPage() {
+function initializeFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const searchContainer = document.querySelector('.search-container');
+
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(b => b.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            // Update current filter
+            currentFilter = this.dataset.filter;
+            // Re-run search with new filter
+            const searchInput = document.getElementById('search-input');
+            if (searchInput && searchInput.value.trim()) {
+                const results = performSearch(searchInput.value.trim());
+                displaySearchResults(results, searchInput.value.trim());
+            }
+        });
+    });
+
+    // Show filters when search is active
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            searchContainer.classList.add('search-active');
+        });
+
+        searchInput.addEventListener('blur', function() {
+            setTimeout(() => {
+                searchContainer.classList.remove('search-active');
+            }, 200);
+        });
+    }
+}
     // Fallback: extract content from current page
     const documents = [];
 
@@ -157,13 +193,31 @@ function performSearch(query) {
 
     try {
         const results = searchIndex.search(query);
-        return results.map(result => {
+        let filteredResults = results.map(result => {
             const doc = searchDocuments[result.ref];
             return {
                 ...doc,
                 score: result.score
             };
-        }).slice(0, 10); // Limit to 10 results
+        });
+
+        // Apply filter
+        if (currentFilter !== 'all') {
+            filteredResults = filteredResults.filter(result => {
+                switch (currentFilter) {
+                    case 'content':
+                        return result.content.toLowerCase().includes(query.toLowerCase());
+                    case 'title':
+                        return result.title.toLowerCase().includes(query.toLowerCase());
+                    case 'category':
+                        return result.category.toLowerCase().includes(query.toLowerCase());
+                    default:
+                        return true;
+                }
+            });
+        }
+
+        return filteredResults.slice(0, 10); // Limit to 10 results
     } catch (error) {
         console.error('Search error:', error);
         return [];
