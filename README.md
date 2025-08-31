@@ -25,16 +25,16 @@ A Jekyll-powered mathematical blog repository organized with hierarchical naviga
 
 1. Clone the repository
 2. Install Jekyll and dependencies:
-   {% highlight bash linenos %}
+   {% highlight bash %}
    gem install jekyll bundler
    bundle install
    {% endhighlight %}
 3. Generate search index:
-   {% highlight bash linenos %}
+   {% highlight bash %}
    node generate_search_index.js
    {% endhighlight %}
 4. Serve locally:
-   {% highlight bash linenos %}
+   {% highlight bash %}
    bundle exec jekyll serve
    {% endhighlight %}
 
@@ -86,7 +86,7 @@ Toggle between light and dark themes using the theme button in the top navigatio
 
 Create new `.md` files in the root directory or organize them in folders. Use Jekyll front matter:
 
-{% highlight yaml linenos %}
+{% highlight yaml %}
 ---
 layout: default
 title: "Your Post Title"

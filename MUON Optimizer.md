@@ -184,7 +184,7 @@ Multiplying by $$\sqrt{n}$$ gives $$\sqrt{n}/\sqrt{m}$$. In common transformer s
 
 ### Pseudocode (conceptual)
 
-{% highlight python linenos %}
+{% highlight python %}
 # W: weight matrix (m x n), m >= n typical
 # G: gradient dL/dW at step t
 # M: momentum buffer, same shape as W

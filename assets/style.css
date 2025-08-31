@@ -449,74 +449,120 @@ pre:hover .code-copy-btn {
   content: counter(line);
 }
 
-/* ===== ROUGE LINE NUMBERS FIX ===== */
+/* ===== RELIABLE CSS LINE NUMBERING SYSTEM ===== */
 
-/* Rouge generates line numbers in a table structure when linenos is used */
-.highlight table {
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  border-spacing: 0 !important;
-  width: 100% !important;
-  background: transparent !important;
-}
-
-.highlight table tbody,
-.highlight table tr,
-.highlight table td {
-  margin: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-  background: transparent !important;
-  vertical-align: top !important;
-}
-
-/* Line numbers column (Rouge .gutter or .linenos class) */
-.highlight table td.gutter,
-.highlight table td.linenos,
-.highlight .linenos {
+/* Basic highlight container */
+.highlight {
   background: var(--bg-secondary) !important;
-  color: var(--text-secondary) !important;
-  user-select: none !important;
-  padding: 8px 12px 8px 8px !important;
-  border-right: 1px solid var(--border-color) !important;
-  text-align: right !important;
-  min-width: 40px !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  margin: 1.2em 0 !important;
+  overflow: hidden !important;
+  color: var(--text-primary) !important;
+  position: relative !important;
+  font-size: 14px !important;
+}
+
+.highlight:hover {
+  box-shadow: 0 2px 8px var(--shadow-light) !important;
+}
+
+/* Line numbering implementation */
+.highlight pre {
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 1em 1em 1em 4em !important;
+  border-radius: 0 !important;
+  color: var(--text-primary) !important;
   font-family: 'Fira Code', 'Monaco', 'Consolas', monospace !important;
+  font-size: inherit !important;
+  line-height: 1.5 !important;
+  tab-size: 4 !important;
+  white-space: pre !important;
+  word-wrap: normal !important;
+  overflow-x: auto !important;
+  counter-reset: line-numbering !important;
+  position: relative !important;
+}
+
+.highlight pre code {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  background: transparent !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+/* Line numbering for each line */
+.highlight pre code .line,
+.highlight pre > code > .line {
+  counter-increment: line-numbering !important;
+  position: relative !important;
+}
+
+.highlight pre code .line::before,
+.highlight pre > code > .line::before {
+  content: counter(line-numbering) !important;
+  position: absolute !important;
+  left: -3.5em !important;
+  top: 0 !important;
+  width: 2.5em !important;
+  text-align: right !important;
+  color: var(--text-secondary) !important;
   font-size: 12px !important;
+  font-family: inherit !important;
+  user-select: none !important;
+  opacity: 0.7 !important;
+  padding-right: 0.5em !important;
+  border-right: 1px solid var(--border-color) !important;
+  background: var(--bg-secondary) !important;
   line-height: 1.5 !important;
 }
 
-.highlight table td.gutter pre,
-.highlight table td.linenos pre,
-.highlight .linenos pre {
-  margin: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  color: inherit !important;
+/* Alternative: Line numbering for code without .line wrapper */
+.highlight pre code:not(.language-plaintext) {
+  background-image: linear-gradient(
+    transparent 0%,
+    transparent calc(1.5em - 1px),
+    var(--border-color) calc(1.5em - 1px),
+    var(--border-color) 1.5em
+  ) !important;
+  background-size: 1px 1.5em !important;
+  background-repeat: repeat-y !important;
+  background-position: 3.5em 0 !important;
+}
+
+.highlight pre code:not(.language-plaintext)::before {
+  content: "1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 10\A 11\A 12\A 13\A 14\A 15\A 16\A 17\A 18\A 19\A 20\A 21\A 22\A 23\A 24\A 25\A 26\A 27\A 28\A 29\A 30\A 31\A 32\A 33\A 34\A 35\A 36\A 37\A 38\A 39\A 40\A 41\A 42\A 43\A 44\A 45\A 46\A 47\A 48\A 49\A 50" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 1em !important;
+  width: 3.5em !important;
+  text-align: right !important;
+  color: var(--text-secondary) !important;
+  font-size: 12px !important;
   font-family: inherit !important;
+  user-select: none !important;
+  opacity: 0.7 !important;
+  padding-right: 0.5em !important;
+  background: var(--bg-secondary) !important;
+  line-height: 1.5 !important;
+  white-space: pre !important;
+  pointer-events: none !important;
 }
 
-/* Code content column */
-.highlight table td.code {
-  padding: 8px 8px 8px 12px !important;
-  width: 100% !important;
-}
-
-/* Theme-specific line number styling */
-:root[data-theme="light"] .highlight table td.gutter,
-:root[data-theme="light"] .highlight table td.linenos,
-:root[data-theme="light"] .highlight .linenos {
+/* Theme-specific line number colors */
+:root[data-theme="light"] .highlight pre code::before,
+:root[data-theme="light"] .highlight pre code .line::before {
   color: #6b7280 !important;
-  border-right-color: #e5e7eb !important;
   background: #f9fafb !important;
 }
 
-:root[data-theme="dark"] .highlight table td.gutter,
-:root[data-theme="dark"] .highlight table td.linenos,
-:root[data-theme="dark"] .highlight .linenos {
+:root[data-theme="dark"] .highlight pre code::before,
+:root[data-theme="dark"] .highlight pre code .line::before {
   color: #9ca3af !important;
-  border-right-color: #374151 !important;
   background: #1f2937 !important;
 }
 
@@ -751,44 +797,6 @@ img.lazy.loaded {
   }
 }
 
-/* Syntax highlighting for Rouge */
-.highlight {
-  background: var(--bg-secondary) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 8px !important;
-  padding: 1em !important;
-  margin: 1.2em 0 !important;
-  overflow-x: auto !important;
-  color: var(--text-primary) !important;
-  position: relative !important;
-  font-size: 14px !important;
-}
-
-.highlight:hover {
-  box-shadow: 0 2px 8px var(--shadow-light) !important;
-}
-
-.highlight pre {
-  background: transparent !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  color: var(--text-primary) !important;
-  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace !important;
-  font-size: inherit !important;
-  line-height: 1.5 !important;
-  tab-size: 4 !important;
-  white-space: pre !important;
-  word-wrap: normal !important;
-  overflow-x: auto !important;
-}
-
-.highlight code {
-  font-family: inherit !important;
-  font-size: inherit !important;
-  color: inherit !important;
-}
-
 /* Copy button for code blocks */
 .highlight::before {
   content: "📋 Copy";
@@ -809,12 +817,15 @@ img.lazy.loaded {
 }
 
 .highlight:hover::before {
+.highlight:hover::before {
   opacity: 1 !important;
 }
 
 .highlight::before:hover {
   background: var(--hover-bg) !important;
   color: var(--accent-color) !important;
+  transform: scale(1.05) !important;
+}
   transform: scale(1.05) !important;
 }
 
