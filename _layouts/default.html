@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-    <link rel="stylesheet" href="/assets/style.css">
-    <!-- Lunr.js for search functionality -->
-    <input id="site-search" type="search" placeholder="Search posts..." style="width:90%;margin-bottom:1em;">
-    <ul id="search-results" style="padding:0;list-style:none;"></ul>
-    <script src="https://unpkg.com/lunr/lunr.min.js"></script>
-    <script src="/assets/search.js"></script>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
+    <link rel="stylesheet" href="/assets/style.css" />
     <!-- MathJax for math equations -->
     <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
@@ -51,8 +46,7 @@
             --text-primary: #24292e;
             --text-secondary: #586069;
             --border-color: #e1e4e8;
-            --link-color: #0366d6;
-            --sidebar-bg: #f6f8fa;
+            --accent-color: #6c63ff;
         }
         
         :root[data-theme="dark"] {
@@ -61,317 +55,280 @@
             --text-primary: #f0f6fc;
             --text-secondary: #8b949e;
             --border-color: #30363d;
-            --link-color: #58a6ff;
-            --sidebar-bg: #161b22;
+            --accent-color: #7c3aed;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-            line-height: 1.6;
             margin: 0;
-            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
             background-color: var(--bg-primary);
             color: var(--text-primary);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         
-        .container {
-            display: flex;
-            min-height: 100vh;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .sidebar {
-            width: 250px;
-            background-color: var(--sidebar-bg);
-            padding: 20px;
-            border-right: 1px solid var(--border-color);
+        /* Top bar styles */
+        .top-bar {
             position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            transition: background-color 0.3s ease;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 20px;
-            background-color: var(--bg-primary);
-        }
-        
-        .sidebar h1 {
+        .site-title {
+            font-size: 20px;
+            font-weight: 600;
             color: var(--text-primary);
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .sidebar nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar nav li {
-            margin-bottom: 8px;
-        }
-        
-        .sidebar nav a {
-            color: var(--link-color);
             text-decoration: none;
-            display: block;
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: background-color 0.2s ease;
-        }
-        
-        .sidebar nav a:hover {
-            background-color: var(--bg-secondary);
         }
         
         .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 8px 12px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
             cursor: pointer;
-            color: var(--text-primary);
             font-size: 14px;
-            transition: all 0.2s ease;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
         
         .theme-toggle:hover {
-            background-color: var(--border-color);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
         }
         
-        .post-content {
-            max-width: 800px;
+        .container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 60px; /* Account for fixed top bar */
         }
         
-        .post-content h1, .post-content h2, .post-content h3 {
+        .sidebar {
+            width: 320px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 20px 30px 20px 30px;
+            overflow-y: auto;
+            overflow-x: visible;
+            position: fixed;
+            height: calc(100vh - 60px);
+            box-sizing: border-box;
+            top: 60px;
+        }
+        
+        .main-content {
+            margin-left: 320px;
+            padding: 40px;
+            flex: 1;
+            min-height: calc(100vh - 60px);
+            background: var(--bg-primary);
             color: var(--text-primary);
         }
         
-        .post-content p {
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .category {
+            margin-bottom: 30px;
+        }
+        
+        .category h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 15px 0 10px 0;
             color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
         }
         
-        .post-content pre {
-            background-color: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 16px;
-            overflow-x: auto;
+        .category h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 12px 0 8px 0;
+            color: var(--accent-color);
         }
         
-        .post-content code {
-            background-color: var(--bg-secondary);
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-size: 0.9em;
-        }
-        
-        .post-content pre code {
-            background: none;
+        .sidebar ul {
+            list-style: none;
+            margin: 0;
             padding: 0;
         }
         
-        .post-content blockquote {
-            border-left: 4px solid var(--link-color);
-            margin: 0;
-            padding-left: 20px;
+        .sidebar li {
+            margin-bottom: 5px;
+            overflow: visible;
+            white-space: nowrap;
+        }
+        
+        .sidebar a {
             color: var(--text-secondary);
-            font-style: italic;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 3px 5px;
+            transition: color 0.2s ease;
+            overflow: visible;
+            text-overflow: clip;
+            white-space: nowrap;
         }
         
-        .post-content a {
-            color: var(--link-color);
-        }
-        
-        .post-content a:hover {
+        .sidebar a:hover {
+            color: var(--accent-color);
             text-decoration: underline;
+        }
+        
+        .nested {
+            margin-left: 15px;
+            margin-top: 5px;
         }
         
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
             }
-            
             .sidebar {
                 width: 100%;
-                position: relative;
+                position: static;
                 height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 20px 15px;
             }
-            
-            .content {
+            .main-content {
                 margin-left: 0;
             }
-        }
-        
-        /* Search bar styles */
-        #site-search {
-            width: 100%;
-            padding: 8px 12px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-        
-        #site-search:focus {
-            outline: none;
-            border-color: var(--link-color);
-            box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
-        }
-        
-        #search-results {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 15px 0;
-        }
-        
-        #search-results li {
-            margin-bottom: 8px;
-        }
-        
-        #search-results a {
-            color: var(--link-color);
-            text-decoration: none;
-            display: block;
-            padding: 8px 12px;
-            border-radius: 6px;
-            background-color: var(--bg-secondary);
-            transition: background-color 0.2s ease;
-        }
-        
-        #search-results a:hover {
-            background-color: var(--border-color);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <aside class="sidebar">
-            <h1><a href="{{ '/' | relative_url }}">{{ site.title }}</a></h1>
-            
-            <!-- Search bar -->
-            <input type="text" id="site-search" placeholder="Search posts...">
-            <ul id="search-results"></ul>
-            
-            <nav>
-                <ul>
-                    <li><a href="{{ '/' | relative_url }}">Home</a></li>
-                    <li><a href="{{ '/about' | relative_url }}">About</a></li>
-                    <li><a href="{{ '/archive' | relative_url }}">Archive</a></li>
-                    <li><a href="{{ '/contact' | relative_url }}">Contact</a></li>
-                </ul>
-            </nav>
-        </aside>
-        
-        <main class="content">
-            <div class="post-content">
-                {{ content }}
-            </div>
-        </main>
+    <!-- Top Bar with Theme Toggle -->
+    <div class="top-bar">
+        <a class="site-title" href="/">{{ site.title | default: "Mathematical Blog" }}</a>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+            🌓 Toggle Theme
+        </button>
     </div>
     
-    <button class="theme-toggle" onclick="toggleTheme()">
-        🌙/☀️
-    </button>
-    
-    <!-- Search functionality -->
-    <script>
-        // Search functionality using Lunr.js
-        let searchIndex;
-        let searchData = [];
+    <div class="container">
+        <nav class="sidebar">
+            <h2>📖 Navigation</h2>
+            
+            <!-- Root .md files -->
+            <div class="category">
+                <h3>📄 Root Pages</h3>
+                {% assign root_pages = site.pages | where_exp: "page", "page.path contains '.md'" %}
+                {% assign filtered_root_pages = '' | split: '' %}
+                {% for page in root_pages %}
+                    {% assign path_parts = page.path | split: '/' %}
+                    {% if path_parts.size == 1 and page.path != 'index.md' %}
+                        {% assign filtered_root_pages = filtered_root_pages | push: page %}
+                    {% endif %}
+                {% endfor %}
+                {% if filtered_root_pages.size > 0 %}
+                    <ul>
+                        {% for page in filtered_root_pages %}
+                            {% unless page.path contains '_' %}
+                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                            {% endunless %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p style="font-size: 12px; color: var(--text-secondary); margin: 10px 0;">No root pages found</p>
+                {% endif %}
+            </div>
+            
+            <!-- Dynamic folder listing -->
+            {% assign all_pages = site.pages | where_exp: "page", "page.path contains '.md'" %}
+            {% assign folders = '' %}
+            {% for page in all_pages %}
+                {% assign path_parts = page.path | split: '/' %}
+                {% if path_parts.size > 1 %}
+                    {% assign folder = path_parts[0] %}
+                    {% unless folders contains folder %}
+                        {% assign folders = folders | append: folder | append: ',' %}
+                    {% endunless %}
+                {% endif %}
+            {% endfor %}
+            {% assign folders_array = folders | split: ',' | uniq %}
+            
+            {% for folder in folders_array %}
+                {% if folder != '' and folder != '_layouts' and folder != '_includes' and folder != '_sass' and folder != '_site' %}
+                    <div class="category">
+                        <h3>📁 {{ folder | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h3>
+                        
+                        <!-- Get all pages in this folder -->
+                        {% assign folder_pages = site.pages | where_exp: "page", "page.path contains folder" | where_exp: "page", "page.path contains '.md'" %}
+                        
+                        <!-- Direct files in folder -->
+                        {% assign direct_folder_pages = '' | split: '' %}
+                        {% for page in folder_pages %}
+                            {% assign path_parts = page.path | split: '/' %}
+                            {% if path_parts.size == 2 and path_parts[0] == folder %}
+                                {% assign direct_folder_pages = direct_folder_pages | push: page %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if direct_folder_pages.size > 0 %}
+                            <ul>
+                                {% for page in direct_folder_pages %}
+                                    {% unless page.path contains '_' %}
+                                        <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                    {% endunless %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        
+                        <!-- Subfolders in this folder -->
+                        {% assign subfolders = '' %}
+                        {% for page in folder_pages %}
+                            {% assign path_parts = page.path | split: '/' %}
+                            {% if path_parts.size > 2 %}
+                                {% assign subfolder = path_parts[1] %}
+                                {% unless subfolders contains subfolder %}
+                                    {% assign subfolders = subfolders | append: subfolder | append: ',' %}
+                                {% endunless %}
+                            {% endif %}
+                        {% endfor %}
+                        {% assign subfolders_array = subfolders | split: ',' | uniq %}
+                        
+                        {% for subfolder in subfolders_array %}
+                            {% if subfolder != '' %}
+                                {% assign subfolder_pages = site.pages | where_exp: "page", "page.path contains subfolder" | where_exp: "page", "page.path contains '.md'" | where_exp: "page", "page.path contains folder" %}
+                                {% if subfolder_pages.size > 0 %}
+                                    <h4>{{ subfolder | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h4>
+                                    <ul class="nested">
+                                        {% for page in subfolder_pages %}
+                                            {% unless page.path contains '_' %}
+                                                <li><a href="{{ page.url | relative_url }}">{{ page.title | default: page.name | remove: '.md' }}</a></li>
+                                            {% endunless %}
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </nav>
         
-        // Initialize search when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeSearch();
-            
-            const searchInput = document.getElementById('site-search');
-            const searchResults = document.getElementById('search-results');
-            
-            searchInput.addEventListener('input', function(e) {
-                const query = e.target.value.trim();
-                
-                if (query.length < 2) {
-                    searchResults.innerHTML = '';
-                    return;
-                }
-                
-                performSearch(query);
-            });
-        });
-        
-        async function initializeSearch() {
-            try {
-                // In a real Jekyll site, you would fetch from a JSON file generated by Jekyll
-                // For now, we'll use a placeholder structure
-                searchData = [
-                    {
-                        id: 'home',
-                        title: 'Home',
-                        content: 'Welcome to our blog home page',
-                        url: '{{ "/" | relative_url }}'
-                    },
-                    {
-                        id: 'about',
-                        title: 'About',
-                        content: 'Learn more about us and our mission',
-                        url: '{{ "/about" | relative_url }}'
-                    }
-                    // Add more pages as needed
-                ];
-                
-                // Build the search index
-                searchIndex = lunr(function() {
-                    this.ref('id');
-                    this.field('title', { boost: 10 });
-                    this.field('content');
-                    
-                    searchData.forEach(function(doc) {
-                        this.add(doc);
-                    }, this);
-                });
-            } catch (error) {
-                console.error('Failed to initialize search:', error);
-            }
-        }
-        
-        function performSearch(query) {
-            const searchResults = document.getElementById('search-results');
-            
-            if (!searchIndex) {
-                searchResults.innerHTML = '<li>Search not available</li>';
-                return;
-            }
-            
-            try {
-                const results = searchIndex.search(query);
-                
-                if (results.length === 0) {
-                    searchResults.innerHTML = '<li>No results found</li>';
-                    return;
-                }
-                
-                const resultItems = results.slice(0, 5).map(result => {
-                    const item = searchData.find(d => d.id === result.ref);
-                    return `<li><a href="${item.url}">${item.title}</a></li>`;
-                }).join('');
-                
-                searchResults.innerHTML = resultItems;
-            } catch (error) {
-                console.error('Search error:', error);
-                searchResults.innerHTML = '<li>Search error occurred</li>';
-            }
-        }
-    </script>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            {{ content }}
+        </main>
+    </div>
 </body>
 </html>
