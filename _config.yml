@@ -10,6 +10,14 @@ kramdown:
   input: GFM
   syntax_highlighter: rouge
   math_engine: mathjax
+  syntax_highlighter_opts:
+    default_lang: plaintext
+    css_class: 'highlight'
+    span:
+      line_numbers: false
+    block:
+      line_numbers: true
+      start_line: 1
 
 theme: minima
 
