@@ -407,16 +407,17 @@
         <button id="back-to-top" class="back-to-top" onclick="scrollToTop()">
             ↑ Top
         </button>
-        <main class="main-content">
-            <!-- Table of Contents -->
-            <div id="toc-container" class="toc-container">
-                <div class="toc-toggle" onclick="toggleTOC()">
-                    <span class="toc-icon">📋</span>
-                    <span class="toc-text">Table of Contents</span>
-                </div>
-                <nav id="toc" class="toc"></nav>
-            </div>
 
+        <!-- Table of Contents -->
+        <div id="toc-container" class="toc-container">
+            <div class="toc-toggle" onclick="toggleTOC()">
+                <span class="toc-icon">📋</span>
+                <span class="toc-text">Table of Contents</span>
+            </div>
+            <nav id="toc" class="toc"></nav>
+        </div>
+
+        <main class="main-content">
             {{ content }}
 
             <!-- Social Sharing -->
@@ -660,7 +661,7 @@
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
 
-                    if (x > rect.width - 40 && y < 40) {
+                    if (x > rect.width - 60 && y < 30) {
                         e.preventDefault();
                         const code = block.querySelector('code') || block.querySelector('pre');
                         if (code) {
@@ -668,12 +669,53 @@
                             navigator.clipboard.writeText(text).then(() => {
                                 // Visual feedback
                                 const original = block.style.background;
+                                const originalBorder = block.style.borderColor;
                                 block.style.background = 'var(--hover-bg)';
+                                block.style.borderColor = 'var(--accent-color)';
+
+                                // Show success message
+                                const successMsg = document.createElement('div');
+                                successMsg.textContent = 'Copied!';
+                                successMsg.style.cssText = `
+                                    position: absolute;
+                                    top: 8px;
+                                    right: 8px;
+                                    background: var(--accent-color);
+                                    color: white;
+                                    padding: 4px 8px;
+                                    border-radius: 4px;
+                                    font-size: 11px;
+                                    font-weight: 500;
+                                    z-index: 11;
+                                `;
+                                block.appendChild(successMsg);
+
                                 setTimeout(() => {
                                     block.style.background = original;
-                                }, 200);
+                                    block.style.borderColor = originalBorder;
+                                    if (successMsg.parentNode) {
+                                        successMsg.parentNode.removeChild(successMsg);
+                                    }
+                                }, 1000);
                             }).catch(err => {
                                 console.error('Failed to copy: ', err);
+                                // Fallback for older browsers
+                                const textArea = document.createElement('textarea');
+                                textArea.value = text;
+                                document.body.appendChild(textArea);
+                                textArea.select();
+                                try {
+                                    document.execCommand('copy');
+                                    // Visual feedback for fallback
+                                    const original = block.style.background;
+                                    block.style.background = 'var(--hover-bg)';
+                                    setTimeout(() => {
+                                        block.style.background = original;
+                                    }, 200);
+                                } catch (fallbackErr) {
+                                    console.error('Fallback copy failed: ', fallbackErr);
+                                }
+                                document.body.removeChild(textArea);
                             });
                         }
                     }

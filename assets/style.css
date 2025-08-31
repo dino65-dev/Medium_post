@@ -218,19 +218,19 @@ a:hover {
 
 /* Table of Contents */
 .toc-container {
-  position: fixed;
-  top: 80px;
-  right: 20px;
-  width: 280px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px var(--shadow-medium);
-  z-index: 1001;
-  max-height: 70vh;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
+  position: fixed !important;
+  top: 80px !important;
+  right: 20px !important;
+  width: 280px !important;
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px var(--shadow-medium) !important;
+  z-index: 2147483647 !important; /* Maximum possible z-index */
+  max-height: 70vh !important;
+  overflow: hidden !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
 .toc-container:hover {
@@ -316,7 +316,7 @@ a:hover {
     width: auto;
     max-width: none;
     max-height: 40vh;
-    z-index: 1001;
+    z-index: 9999 !important;
   }
 
   .toc-toggle {
@@ -659,64 +659,69 @@ img.lazy.loaded {
 
 /* Syntax highlighting for Rouge */
 .highlight {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 1em;
-  margin: 1.2em 0;
-  overflow-x: auto;
-  color: var(--text-primary);
-  position: relative;
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  padding: 1em !important;
+  margin: 1.2em 0 !important;
+  overflow-x: auto !important;
+  color: var(--text-primary) !important;
+  position: relative !important;
+  font-size: 14px !important;
 }
 
 .highlight:hover {
-  box-shadow: 0 2px 8px var(--shadow-light);
+  box-shadow: 0 2px 8px var(--shadow-light) !important;
 }
 
 .highlight pre {
-  background: transparent;
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
-  color: var(--text-primary);
-  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
-  font-size: 14px;
-  line-height: 1.5;
-  tab-size: 4;
-  white-space: pre;
-  word-wrap: normal;
-  overflow-x: auto;
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  color: var(--text-primary) !important;
+  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace !important;
+  font-size: inherit !important;
+  line-height: 1.5 !important;
+  tab-size: 4 !important;
+  white-space: pre !important;
+  word-wrap: normal !important;
+  overflow-x: auto !important;
 }
 
 .highlight code {
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
 }
 
 /* Copy button for code blocks */
 .highlight::before {
-  content: "📋";
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 12px;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  z-index: 1;
+  content: "📋 Copy";
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 4px !important;
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  opacity: 0 !important;
+  transition: all 0.2s ease !important;
+  z-index: 10 !important;
+  color: var(--text-secondary) !important;
 }
 
 .highlight:hover::before {
-  opacity: 1;
+  opacity: 1 !important;
 }
 
 .highlight::before:hover {
-  background: var(--hover-bg);
+  background: var(--hover-bg) !important;
+  color: var(--accent-color) !important;
+  transform: scale(1.05) !important;
 }
 
 /* Syntax highlighting colors for light theme */
