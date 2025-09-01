@@ -1,0 +1,18 @@
+[
+  {
+    "id": 0,
+    "title": "Intro",
+    "content": "Welcome to my mathematical blog repository! I'm excited to share this space where mathematics, equations, and educational content come together. About Me Hi there! I'm Dinmay Kumar Brahma (dino65-dev), an AI/ML and biotech nerd exploring the intersection of algorithms and biology. I love building cool projects that blend science with technology. Background - Currently studying at IIT Guwahati - Passionate about AI, Quantum Computing, and Biotechnology - Currently working on lox - a Python-based Lox interpreter - Future goal: Creating an Artificial Brain using AI and quantum mechanics - Skilled in Python and AI development My Interests - Artificial Intelligence & Machine Learning: Exploring the frontiers of intelligent systems - Quantum Computing: Understanding the quantum world and its computational possibilities - Biotechnology: The fascinating intersection of biology and technology - Mathematical Modeling: Using mathematics to understand and solve real-world problems - Educational Content: Sharing knowledge and making complex topics accessible What You'll Find Here This repository is organized as a comprehensive mathematical blog with: - Mathematics: Algebra, calculus, statistics, and discrete mathematics - Equations: Differential equations, algebraic systems, and special functions - Educational Posts: Tutorials, problem-solving guides, and research insights - Resources: Cheat sheets, formulas, and mathematical tools Connect With Me - Email: dinmaybrahma@outlook.com - GitHub: @dino65-dev - LinkedIn: Dinmay Brahma - Medium: @dinmaybrahma - HuggingFace: spedrox-sac - Kaggle: dinmaybrahma ⚡ Fun fact: I can talk about neural networks and CRISPR over coffee like it's casual small talk! Thanks for visiting, and I hope you find the mathematical content here both educational and inspiring!",
+    "category": "Introduction",
+    "tags": ["introduction", "about", "mathematics", "AI", "biotechnology"],
+    "url": "/"
+  },
+  {
+    "id": 1,
+    "title": "Muon Optimizer",
+    "content": "This guide derives Muon from the ground up, without assuming familiarity with Adam, adaptive methods, or matrix calculus beyond basics. All math is written so a motivated beginner can follow. Why Muon - Classic optimizers treat parameters as unrelated scalars, but hidden-layer weights are matrices with rich geometry. Muon exploits this by computing a matrix-structured step that spreads learning across all directions, avoiding updates that collapse onto a few singular modes. - The core idea: take the momentum matrix for a hidden layer and replace it with a near-orthogonal direction using a fast polynomial/Newton-Schulz procedure, then scale the step and apply weight decay. Notation - A hidden linear layer: input x ∈ ℝⁿ, weight W ∈ ℝᵐˣⁿ, output y = W x. - Loss at step t: ℒₜ, gradient Gₜ = ∇_W ℒₜ(Wₜ₋₁) ∈ ℝᵐˣⁿ. - Momentum matrix: Mₜ. - Spectral norm: ||A||₂ = σ_max(A). Nuclear norm: ||A||_* = ∑ᵢ σᵢ(A). - Inner product: ⟨A, B⟩ = tr(Aᵀ B). From output RMS control to spectral-norm geometry The change in output for a small weight perturbation ΔW is Δy = ΔW x. If inputs are standardized so that E||x||₂² = 1 (or bounded), then Jensen plus submultiplicativity gives the key bound: E||Δy||₂² = E||ΔW x||₂² ≤ ||ΔW||₂² E||x||₂² ≈ ||ΔW||₂². Thus, constraining the spectral norm of the update directly controls the RMS output change the layer induces. If we want steepest descent per unit output RMS change, we must optimize in a spectral-norm geometry.",
+    "category": "Machine Learning",
+    "tags": ["optimizer", "machine learning", "mathematics", "neural networks", "optimization"],
+    "url": "/muon-optimizer/"
+  }
+]

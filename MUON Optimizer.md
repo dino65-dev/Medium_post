@@ -184,7 +184,7 @@ Multiplying by $$\sqrt{n}$$ gives $$\sqrt{n}/\sqrt{m}$$. In common transformer s
 
 ### Pseudocode (conceptual)
 
-```python
+{% highlight python %}
 # W: weight matrix (m x n), m >= n typical
 # G: gradient dL/dW at step t
 # M: momentum buffer, same shape as W
@@ -218,7 +218,7 @@ step_dir = alpha * (n**0.5) * O
 
 # 4) Coupled decay update
 W = W - eta * (step_dir + lam * W)
-```
+{% endhighlight %}
 
 Remarks:
 - In practice, pre-scaling and the iteration variant are chosen to maximize low-precision stability (bf16/fp16) and minimize GEMMs.

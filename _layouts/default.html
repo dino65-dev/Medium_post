@@ -4,8 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}" />
-    <link rel="stylesheet" href="/assets/style.css" />
+    <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}" />
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#6c63ff" />
+    <!-- Favicon and icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
     <!-- MathJax for math equations -->
     <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
@@ -16,7 +21,22 @@
             }
         };
     </script>
-    
+    <!-- Lunr.js for search -->
+    <script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
+    <script src="{{ '/assets/search.js' | relative_url }}"></script>
+    <script src="{{ '/assets/analytics.js' | relative_url }}"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(error => console.log('SW registration failed'));
+            });
+        }
+    </script>
+
     <!-- Theme toggle functionality -->
     <script>
         // Initialize theme from localStorage or default to light
@@ -24,7 +44,7 @@
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
-        
+
         // Toggle between light and dark themes
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -32,11 +52,11 @@
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         }
-        
+
         // Initialize theme immediately
         initializeTheme();
     </script>
-    
+
     <!-- Custom styles for sidebar -->
     <style>
         /* CSS Variables for theme support */
@@ -48,7 +68,7 @@
             --border-color: #e1e4e8;
             --accent-color: #6c63ff;
         }
-        
+
         :root[data-theme="dark"] {
             --bg-primary: #0d1117;
             --bg-secondary: #161b22;
@@ -57,7 +77,7 @@
             --border-color: #30363d;
             --accent-color: #7c3aed;
         }
-        
+
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -66,7 +86,7 @@
             color: var(--text-primary);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-        
+
         /* Top bar styles */
         .top-bar {
             position: fixed;
@@ -83,14 +103,42 @@
             z-index: 1000;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 300px;
+            width: 100%;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        #search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
         .site-title {
             font-size: 20px;
             font-weight: 600;
             color: var(--text-primary);
             text-decoration: none;
         }
-        
+
         .theme-toggle {
             background: var(--accent-color);
             color: white;
@@ -102,18 +150,18 @@
             font-weight: 500;
             transition: all 0.3s ease;
         }
-        
+
         .theme-toggle:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
         }
-        
+
         .container {
             display: flex;
             min-height: 100vh;
             padding-top: 60px; /* Account for fixed top bar */
         }
-        
+
         .sidebar {
             width: 320px;
             background-color: var(--bg-secondary);
@@ -126,7 +174,7 @@
             box-sizing: border-box;
             top: 60px;
         }
-        
+
         .main-content {
             margin-left: 320px;
             padding: 40px;
@@ -135,18 +183,18 @@
             background: var(--bg-primary);
             color: var(--text-primary);
         }
-        
+
         .sidebar h2 {
             font-size: 20px;
             margin-bottom: 20px;
             color: var(--text-primary);
             font-weight: 600;
         }
-        
+
         .category {
             margin-bottom: 30px;
         }
-        
+
         .category h3 {
             font-size: 16px;
             font-weight: 600;
@@ -155,26 +203,26 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 5px;
         }
-        
+
         .category h4 {
             font-size: 14px;
             font-weight: 600;
             margin: 12px 0 8px 0;
             color: var(--accent-color);
         }
-        
+
         .sidebar ul {
             list-style: none;
             margin: 0;
             padding: 0;
         }
-        
+
         .sidebar li {
             margin-bottom: 5px;
             overflow: visible;
             white-space: nowrap;
         }
-        
+
         .sidebar a {
             color: var(--text-secondary);
             text-decoration: none;
@@ -186,18 +234,37 @@
             text-overflow: clip;
             white-space: nowrap;
         }
-        
+
         .sidebar a:hover {
             color: var(--accent-color);
             text-decoration: underline;
         }
-        
+
         .nested {
             margin-left: 15px;
             margin-top: 5px;
         }
-        
+
         @media (max-width: 768px) {
+            .top-bar {
+                padding: 0 15px;
+                height: auto;
+                flex-direction: column;
+                gap: 10px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            .top-bar-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .search-container {
+                max-width: none;
+                flex: 1;
+            }
+
             .container {
                 flex-direction: column;
             }
@@ -219,15 +286,26 @@
     <!-- Top Bar with Theme Toggle -->
     <div class="top-bar">
         <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title | default: "Mathematical Blog" }}</a>
-        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
-            🌓 Toggle Theme
-        </button>
+        <div class="top-bar-right">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="🔍 Search posts..." />
+                <div id="search-results" class="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+                🌓 Toggle Theme
+            </button>
+        </div>
     </div>
-    
+
     <div class="container">
+        <!-- Reading Progress Bar -->
+        <div class="reading-progress">
+            <div class="reading-progress-bar"></div>
+        </div>
+
         <nav class="sidebar">
             <h2>📖 Navigation</h2>
-            
+
             <!-- Root .md files -->
             <div class="category">
                 <h3>📄 Root Pages</h3>
@@ -251,7 +329,7 @@
                     <p style="font-size: 12px; color: var(--text-secondary); margin: 10px 0;">No root pages found</p>
                 {% endif %}
             </div>
-            
+
             <!-- Dynamic folder listing -->
             {% assign all_pages = site.pages | where_exp: "page", "page.path contains '.md'" %}
             {% assign folders = '' %}
@@ -265,15 +343,15 @@
                 {% endif %}
             {% endfor %}
             {% assign folders_array = folders | split: ',' | uniq %}
-            
+
             {% for folder in folders_array %}
                 {% if folder != '' and folder != '_layouts' and folder != '_includes' and folder != '_sass' and folder != '_site' %}
                     <div class="category">
                         <h3>📁 {{ folder | replace: '-', ' ' | replace: '_', ' ' | capitalize }}</h3>
-                        
+
                         <!-- Get all pages in this folder -->
                         {% assign folder_pages = site.pages | where_exp: "page", "page.path contains folder" | where_exp: "page", "page.path contains '.md'" %}
-                        
+
                         <!-- Direct files in folder -->
                         {% assign direct_folder_pages = '' | split: '' %}
                         {% for page in folder_pages %}
@@ -291,7 +369,7 @@
                                 {% endfor %}
                             </ul>
                         {% endif %}
-                        
+
                         <!-- Subfolders in this folder -->
                         {% assign subfolders = '' %}
                         {% for page in folder_pages %}
@@ -304,7 +382,7 @@
                             {% endif %}
                         {% endfor %}
                         {% assign subfolders_array = subfolders | split: ',' | uniq %}
-                        
+
                         {% for subfolder in subfolders_array %}
                             {% if subfolder != '' %}
                                 {% assign subfolder_pages = site.pages | where_exp: "page", "page.path contains subfolder" | where_exp: "page", "page.path contains '.md'" | where_exp: "page", "page.path contains folder" %}
@@ -324,11 +402,326 @@
                 {% endif %}
             {% endfor %}
         </nav>
-        
-        <!-- Main Content Area -->
+
+        <!-- Back to Top Button -->
+        <button id="back-to-top" class="back-to-top" onclick="scrollToTop()">
+            ↑ Top
+        </button>
+
+        <!-- Table of Contents -->
+        <div id="toc-container" class="toc-container">
+            <div class="toc-toggle" onclick="toggleTOC()">
+                <span class="toc-icon">📋</span>
+                <span class="toc-text">Table of Contents</span>
+            </div>
+            <nav id="toc" class="toc"></nav>
+        </div>
+
         <main class="main-content">
             {{ content }}
+
+            <!-- Social Sharing -->
+            <div class="social-share">
+                <h3>Share this post</h3>
+                <div class="share-buttons">
+                    <a href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ page.url | absolute_url | url_encode }}" target="_blank" class="share-btn twitter">
+                        🐦 Twitter
+                    </a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | url_encode }}" target="_blank" class="share-btn linkedin">
+                        💼 LinkedIn
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url | url_encode }}" target="_blank" class="share-btn facebook">
+                        📘 Facebook
+                    </a>
+                    <button onclick="copyToClipboard('{{ page.url | absolute_url }}')" class="share-btn copy">
+                        📋 Copy Link
+                    </button>
+                </div>
+            </div>
         </main>
     </div>
+
+    <!-- Advanced Features Scripts -->
+    <script>
+        // Reading Progress Indicator
+        function updateReadingProgress() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.offsetHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            const progressBar = document.querySelector('.reading-progress-bar');
+            if (progressBar) {
+                progressBar.style.width = scrollPercent + '%';
+            }
+        }
+
+        window.addEventListener('scroll', updateReadingProgress);
+        window.addEventListener('load', updateReadingProgress);
+
+        // Table of Contents Generation
+        function generateTOC() {
+            const headings = document.querySelectorAll('.main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6');
+            const toc = document.getElementById('toc');
+
+            if (headings.length < 3) {
+                document.getElementById('toc-container').style.display = 'none';
+                return;
+            }
+
+            let tocHtml = '<ul>';
+            let currentLevel = 1;
+            let sectionCount = 0;
+
+            headings.forEach((heading, index) => {
+                const level = parseInt(heading.tagName.charAt(1));
+                const text = heading.textContent.trim();
+                const id = 'section-' + index;
+
+                heading.id = id;
+
+                if (level > currentLevel) {
+                    tocHtml += '<ul>'.repeat(level - currentLevel);
+                } else if (level < currentLevel) {
+                    tocHtml += '</ul>'.repeat(currentLevel - level);
+                }
+
+                tocHtml += `<li><a href="#${id}" onclick="smoothScrollTo('${id}')">${text}</a></li>`;
+                currentLevel = level;
+                sectionCount++;
+            });
+
+            tocHtml += '</ul>'.repeat(currentLevel - 1);
+            toc.innerHTML = tocHtml;
+        }
+
+        function toggleTOC() {
+            const toc = document.getElementById('toc');
+            const container = document.getElementById('toc-container');
+            const icon = container.querySelector('.toc-icon');
+
+            toc.classList.toggle('visible');
+
+            if (toc.classList.contains('visible')) {
+                container.classList.add('toc-expanded');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                container.classList.remove('toc-expanded');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function smoothScrollTo(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Back to Top Button
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleBackToTop() {
+            const button = document.getElementById('back-to-top');
+            if (window.pageYOffset > 300) {
+                button.classList.add('visible');
+            } else {
+                button.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('scroll', toggleBackToTop);
+
+        // Enhanced Code Features
+        function enhanceCodeBlocks() {
+            const codeBlocks = document.querySelectorAll('pre code');
+
+            codeBlocks.forEach((block, index) => {
+                // Add copy button
+                const pre = block.parentElement;
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'code-copy-btn';
+                copyBtn.textContent = '📋 Copy';
+                copyBtn.onclick = () => {
+                    navigator.clipboard.writeText(block.textContent).then(() => {
+                        copyBtn.textContent = '✅ Copied!';
+                        setTimeout(() => copyBtn.textContent = '📋 Copy', 2000);
+                    });
+                };
+
+                pre.style.position = 'relative';
+                pre.appendChild(copyBtn);
+
+                // Add line numbers if it's a long code block
+                if (block.textContent.split('\n').length > 5) {
+                    const lines = block.textContent.split('\n');
+                    const numberedContent = lines.map((line, i) =>
+                        `<span class="line-number">${i + 1}</span>${line}`
+                    ).join('\n');
+
+                    block.innerHTML = numberedContent;
+                    pre.classList.add('line-numbers');
+                }
+            });
+        }
+
+        // Lazy Loading for Images
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('img[data-src]');
+
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            images.forEach(img => imageObserver.observe(img));
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Show feedback
+                const btn = event.target.closest('.share-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('success');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('success');
+                }, 2000);
+            });
+        }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + K: Focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) searchInput.focus();
+            }
+
+            // Ctrl/Cmd + T: Toggle TOC
+            if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+                e.preventDefault();
+                toggleTOC();
+            }
+
+            // Escape: Close search/modal
+            if (e.key === 'Escape') {
+                const searchResults = document.getElementById('search-results');
+                if (searchResults && searchResults.style.display !== 'none') {
+                    searchResults.style.display = 'none';
+                }
+            }
+        });
+
+        // Initialize advanced features
+        document.addEventListener('DOMContentLoaded', function() {
+            generateTOC();
+            enhanceCodeBlocks();
+            lazyLoadImages();
+
+            // Add print styles
+            const printStyles = `
+                @media print {
+                    .sidebar, .top-bar, .toc-container, .social-share, .code-copy-btn {
+                        display: none !important;
+                    }
+                    .main-content {
+                        margin-left: 0 !important;
+                        max-width: none !important;
+                    }
+                    body {
+                        font-size: 12pt;
+                        line-height: 1.4;
+                    }
+                }
+            `;
+
+            const style = document.createElement('style');
+            style.textContent = printStyles;
+            document.head.appendChild(style);
+        });
+
+        // Copy code block functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('.highlight');
+
+            codeBlocks.forEach(block => {
+                block.addEventListener('click', function(e) {
+                    // Only trigger if clicking on the copy button area (top-right)
+                    const rect = block.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    if (x > rect.width - 60 && y < 30) {
+                        e.preventDefault();
+                        const code = block.querySelector('code') || block.querySelector('pre');
+                        if (code) {
+                            const text = code.textContent || code.innerText;
+                            navigator.clipboard.writeText(text).then(() => {
+                                // Visual feedback
+                                const original = block.style.background;
+                                const originalBorder = block.style.borderColor;
+                                block.style.background = 'var(--hover-bg)';
+                                block.style.borderColor = 'var(--accent-color)';
+
+                                // Show success message
+                                const successMsg = document.createElement('div');
+                                successMsg.textContent = 'Copied!';
+                                successMsg.style.cssText = `
+                                    position: absolute;
+                                    top: 8px;
+                                    right: 8px;
+                                    background: var(--accent-color);
+                                    color: white;
+                                    padding: 4px 8px;
+                                    border-radius: 4px;
+                                    font-size: 11px;
+                                    font-weight: 500;
+                                    z-index: 11;
+                                `;
+                                block.appendChild(successMsg);
+
+                                setTimeout(() => {
+                                    block.style.background = original;
+                                    block.style.borderColor = originalBorder;
+                                    if (successMsg.parentNode) {
+                                        successMsg.parentNode.removeChild(successMsg);
+                                    }
+                                }, 1000);
+                            }).catch(err => {
+                                console.error('Failed to copy: ', err);
+                                // Fallback for older browsers
+                                const textArea = document.createElement('textarea');
+                                textArea.value = text;
+                                document.body.appendChild(textArea);
+                                textArea.select();
+                                try {
+                                    document.execCommand('copy');
+                                    // Visual feedback for fallback
+                                    const original = block.style.background;
+                                    block.style.background = 'var(--hover-bg)';
+                                    setTimeout(() => {
+                                        block.style.background = original;
+                                    }, 200);
+                                } catch (fallbackErr) {
+                                    console.error('Fallback copy failed: ', fallbackErr);
+                                }
+                                document.body.removeChild(textArea);
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
