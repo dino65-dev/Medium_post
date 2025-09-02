@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test Page</title>
+    <!-- Core Stylesheets -->
+    <link rel="stylesheet" href="assets/code-highlight.css">
+    <link rel="stylesheet" href="assets/reading-experience.css">
+    <link rel="stylesheet" href="assets/advanced-search.css">
+
+    <style>
+        /* CSS Variables for theme support */
+        :root[data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #24292e;
+            --text-secondary: #586069;
+            --border-color: #e1e4e8;
+            --accent-color: #6c63ff;
+            --accent-light: rgba(108, 99, 255, 0.1);
+            --hover-bg: #f6f8fa;
+            --danger-color: #d73a49;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --text-primary: #f0f6fc;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --accent-color: #7c3aed;
+            --accent-light: rgba(124, 58, 237, 0.1);
+            --hover-bg: #21262d;
+            --danger-color: #f85149;
+            --success-color: #3fb950;
+            --warning-color: #d29922;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 20px;
+        }
+
+        .top-bar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .search-trigger:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-color);
+            color: var(--text-primary);
+        }
+
+        .reading-mode-toggle,
+        .theme-toggle {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .reading-mode-toggle:hover,
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+        }
+
+        .reading-mode-toggle.active {
+            background: #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .debug-section {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .debug-section h3 {
+            color: var(--accent-color);
+            margin-top: 0;
+        }
+    </style>
+
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
+</head>
+<body data-theme="light">
+    <div class="top-bar">
+        <div class="search-trigger" onclick="openAdvancedSearch()">
+            <span class="search-icon">🔍</span>
+            <span class="search-text">Search</span>
+            <span class="search-shortcut">⌘K</span>
+        </div>
+
+        <button class="reading-mode-toggle" onclick="toggleReadingMode()" title="Toggle AI Reading Mode">
+            🤖 AI Reading
+        </button>
+
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+            🌓 Toggle Theme
+        </button>
+
+        <button onclick="testFeatures()" style="background: #ff6b6b; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">
+            🔧 Test Features
+        </button>
+    </div>
+
+    <div class="content">
+        <h1>Debug Test Page</h1>
+
+        <div class="debug-section">
+            <h3>🔍 Search Test</h3>
+            <p>Click the search button above or press Ctrl/Cmd + K to test search functionality.</p>
+            <div id="search-status">Ready to test...</div>
+        </div>
+
+        <div class="debug-section">
+            <h3>🤖 AI Reading Test</h3>
+            <p>Click the AI Reading button to test reading mode functionality.</p>
+            <div id="reading-status">Ready to test...</div>
+        </div>
+
+        <div class="debug-section">
+            <h3>💻 Code Block Test</h3>
+            <p>Testing code highlighting and copy functionality:</p>
+
+<div class="highlight"><pre><code class="language-python">def test_function():
+    """Test function for debugging"""
+    print("Hello World!")
+    for i in range(5):
+        print(f"Number: {i}")
+
+    return "Success!"
+
+# Test the function
+result = test_function()
+print(result)
+</code></pre></div>
+        </div>
+
+        <div class="debug-section">
+            <h3>📋 Console Output</h3>
+            <div id="console-output" style="background: #000; color: #0f0; padding: 10px; border-radius: 4px; font-family: monospace; min-height: 100px; white-space: pre-wrap;"></div>
+        </div>
+    </div>
+
+    <!-- Advanced Search Modal (Same as in main layout) -->
+    <div class="search-overlay" id="advancedSearchOverlay">
+        <div class="search-modal">
+            <div class="search-header">
+                <div class="search-input-container">
+                    <input type="text" id="advancedSearchInput" placeholder="Search posts, topics, code..." autocomplete="off" />
+                    <button class="voice-search-btn" id="voiceSearchBtn" title="Voice Search">
+                        🎤
+                    </button>
+                    <button class="search-close-btn" onclick="closeAdvancedSearch()" title="Close Search">
+                        ✕
+                    </button>
+                </div>
+                <div class="search-filters" id="searchFilters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="posts">Posts</button>
+                    <button class="filter-btn" data-filter="code">Code</button>
+                    <button class="filter-btn" data-filter="math">Math</button>
+                    <button class="filter-btn" data-filter="tutorials">Tutorials</button>
+                </div>
+            </div>
+            <div class="search-body" id="searchBody">
+                <div class="search-results" id="advancedSearchResults"></div>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+                <div class="search-history" id="searchHistory"></div>
+            </div>
+            <div class="search-footer">
+                <div class="search-stats" id="searchStats">
+                    Ready to search
+                </div>
+                <div class="search-shortcuts">
+                    <kbd>↵</kbd> to select • <kbd>↑↓</kbd> to navigate • <kbd>Esc</kbd> to close
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load JavaScript files -->
+    <script src="assets/advanced-search.js"></script>
+    <script src="assets/ai-reading.js"></script>
+    <script src="assets/code-copy.js"></script>
+
+    <!-- Debug and Integration Script -->
+    <script>
+        // Console logging override for debugging
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+
+        function addToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff6b6b' : type === 'warn' ? '#ffd93d' : '#0f0';
+            consoleOutput.innerHTML += `<span style="color: ${color}">[${timestamp}] ${type.toUpperCase()}: ${message}</span>\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToConsole(args.join(' '), 'warn');
+        };
+
+        // Global functions for template integration
+        function openAdvancedSearch() {
+            console.log('🔍 Opening advanced search...');
+            document.getElementById('search-status').textContent = 'Search opened!';
+            if (window.advancedSearch) {
+                window.advancedSearch.open();
+            } else {
+                console.error('❌ Advanced search not initialized');
+                document.getElementById('search-status').textContent = 'Error: Search not initialized';
+            }
+        }
+
+        function closeAdvancedSearch() {
+            console.log('🔍 Closing advanced search...');
+            if (window.advancedSearch) {
+                window.advancedSearch.close();
+            }
+        }
+
+        function toggleReadingMode() {
+            console.log('🤖 Toggling reading mode...');
+            document.getElementById('reading-status').textContent = 'Reading mode toggled!';
+            if (window.aiReading) {
+                window.aiReading.toggleReadingMode();
+                const btn = document.querySelector('.reading-mode-toggle');
+                btn.classList.toggle('active');
+            } else {
+                console.error('❌ AI Reading not initialized');
+                document.getElementById('reading-status').textContent = 'Error: AI Reading not initialized';
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            console.log(`🌓 Theme changed to: ${newTheme}`);
+        }
+
+        function testFeatures() {
+            console.log('🔧 Testing all features...');
+
+            // Test search
+            console.log('Testing search initialization...');
+            if (typeof AdvancedSearch !== 'undefined') {
+                console.log('✅ AdvancedSearch class found');
+            } else {
+                console.error('❌ AdvancedSearch class not found');
+            }
+
+            // Test AI Reading
+            console.log('Testing AI Reading initialization...');
+            if (typeof AIReadingExperience !== 'undefined') {
+                console.log('✅ AIReadingExperience class found');
+            } else {
+                console.error('❌ AIReadingExperience class not found');
+            }
+
+            // Test Lunr
+            if (typeof lunr !== 'undefined') {
+                console.log('✅ Lunr.js loaded successfully');
+            } else {
+                console.error('❌ Lunr.js not loaded');
+            }
+
+            // Test search index
+            fetch('assets/search_index.json')
+                .then(response => {
+                    if (response.ok) {
+                        console.log('✅ Search index file accessible');
+                        return response.json();
+                    } else {
+                        throw new Error('Search index not found');
+                    }
+                })
+                .then(data => {
+                    console.log(`✅ Search index loaded with ${data.length} items`);
+                })
+                .catch(error => {
+                    console.error('❌ Search index error:', error.message);
+                });
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 DOM loaded, initializing features...');
+
+            // Initialize Advanced Search
+            if (typeof AdvancedSearch !== 'undefined') {
+                console.log('🔍 Initializing Advanced Search...');
+                window.advancedSearch = new AdvancedSearch();
+            } else {
+                console.error('❌ AdvancedSearch class not available');
+            }
+
+            // Initialize AI Reading Experience
+            if (typeof AIReadingExperience !== 'undefined') {
+                console.log('🤖 Initializing AI Reading Experience...');
+                window.aiReading = new AIReadingExperience();
+            } else {
+                console.error('❌ AIReadingExperience class not available');
+            }
+
+            // Initialize code copy functionality
+            if (typeof addCopyButtons !== 'undefined') {
+                console.log('💻 Initializing code copy functionality...');
+                addCopyButtons();
+            } else {
+                console.error('❌ Code copy functionality not available');
+            }
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + K to open search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    openAdvancedSearch();
+                }
+
+                // Escape to close search
+                if (e.key === 'Escape') {
+                    closeAdvancedSearch();
+                }
+
+                // Ctrl/Cmd + Shift + R for reading mode
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'R') {
+                    e.preventDefault();
+                    toggleReadingMode();
+                }
+            });
+
+            console.log('✅ All features initialized!');
+        });
+    </script>
+</body>
+</html>

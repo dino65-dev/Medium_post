@@ -22,22 +22,20 @@ class AdvancedSearch {
 
     async loadSearchIndex() {
         try {
-            const response = await fetch('/search_index.json');
+            const response = await fetch('/assets/search_index.json');
             const data = await response.json();
 
             // Initialize Lunr.js with advanced configuration
             this.searchIndex = lunr(function () {
-                this.ref('id');
+                this.ref('url');
                 this.field('title', { boost: 10 });
                 this.field('content', { boost: 5 });
                 this.field('tags', { boost: 15 });
                 this.field('category', { boost: 8 });
                 this.field('excerpt', { boost: 3 });
 
-                // Add support for fuzzy matching
-                this.use(lunr.multiLanguage('en'));
-
-                data.forEach((doc) => {
+                data.forEach((doc, index) => {
+                    doc.id = index; // Add unique ID
                     this.add(doc);
                 });
             });
