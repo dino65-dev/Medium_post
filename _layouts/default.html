@@ -4,21 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
-    
+
     <!-- Core Stylesheets -->
     <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}" />
     <link rel="stylesheet" href="{{ '/assets/code-highlight.css' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/reading-experience.css' | relative_url }}">
     <link rel="stylesheet" href="{{ '/assets/advanced-search.css' | relative_url }}">
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#6c63ff" />
-    
+
     <!-- Favicon and icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png" />
-    
+
     <!-- MathJax for math equations -->
     <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
@@ -29,10 +29,10 @@
             }
         };
     </script>
-    
+
     <!-- External Libraries -->
     <script src="https://unpkg.com/lunr@2.3.9/lunr.min.js"></script>
-    
+
     <!-- Core Scripts -->
     <script src="{{ '/assets/search.js' | relative_url }}"></script>
     <script src="{{ '/assets/analytics.js' | relative_url }}"></script>
@@ -343,12 +343,12 @@
                 <span class="search-text">Search</span>
                 <span class="search-shortcut">⌘K</span>
             </div>
-            
+
             <!-- AI Reading Mode Toggle -->
             <button class="reading-mode-toggle" onclick="toggleReadingMode()" title="Toggle AI Reading Mode">
                 🤖 AI Reading
             </button>
-            
+
             <!-- Theme Toggle -->
             <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
                 🌓 Toggle Theme

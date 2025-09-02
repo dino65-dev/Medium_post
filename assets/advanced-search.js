@@ -24,7 +24,7 @@ class AdvancedSearch {
         try {
             const response = await fetch('/search_index.json');
             const data = await response.json();
-            
+
             // Initialize Lunr.js with advanced configuration
             this.searchIndex = lunr(function () {
                 this.ref('id');
@@ -33,15 +33,15 @@ class AdvancedSearch {
                 this.field('tags', { boost: 15 });
                 this.field('category', { boost: 8 });
                 this.field('excerpt', { boost: 3 });
-                
+
                 // Add support for fuzzy matching
                 this.use(lunr.multiLanguage('en'));
-                
+
                 data.forEach((doc) => {
                     this.add(doc);
                 });
             });
-            
+
             this.documents = data;
         } catch (error) {
             console.warn('Search index not found, creating basic search');
@@ -98,7 +98,7 @@ class AdvancedSearch {
             <span class="search-text">Search</span>
             <span class="search-shortcut">⌘K</span>
         `;
-        
+
         // Insert into header or create floating button
         const header = document.querySelector('header, .header, nav');
         if (header) {
@@ -133,7 +133,7 @@ class AdvancedSearch {
                 e.preventDefault();
                 this.openSearch();
             }
-            
+
             if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
                 this.closeSearch();
             }
@@ -142,7 +142,7 @@ class AdvancedSearch {
         // Search input handling
         searchInput.addEventListener('input', this.debounce((e) => {
             const query = e.target.value.trim();
-            
+
             if (query.length === 0) {
                 this.showSearchHistory();
                 return;
@@ -163,7 +163,7 @@ class AdvancedSearch {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
                 currentFilter = e.target.dataset.filter;
-                
+
                 const query = searchInput.value.trim();
                 if (query.length >= 2) {
                     this.performSearch(query, currentFilter);
@@ -174,7 +174,7 @@ class AdvancedSearch {
         // Navigation with arrow keys
         searchInput.addEventListener('keydown', (e) => {
             const results = document.querySelectorAll('.search-result-item, .suggestion-item');
-            
+
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 selectedIndex = Math.min(selectedIndex + 1, results.length - 1);
@@ -210,7 +210,7 @@ class AdvancedSearch {
         // Advanced Lunr.js search with fuzzy matching
         const searchTerms = query.split(' ').map(term => `${term}~1 ${term}*`).join(' ');
         const results = this.searchIndex.search(searchTerms);
-        
+
         // Filter results based on active filter
         let filteredResults = results.map(result => {
             const doc = this.documents.find(d => d.id === result.ref);
@@ -300,7 +300,7 @@ class AdvancedSearch {
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
-        
+
         recognition.continuous = false;
         recognition.interimResults = false;
         recognition.lang = 'en-US';
@@ -353,7 +353,7 @@ class AdvancedSearch {
         searchSuggestions.style.display = 'block';
 
         const suggestions = this.generateSuggestions(query);
-        
+
         searchSuggestions.innerHTML = `
             <div class="suggestions-header">
                 <h4>Search Suggestions</h4>
@@ -405,7 +405,7 @@ class AdvancedSearch {
                     </div>
                 </div>
             ` : ''}
-            
+
             <div class="history-section">
                 <h4>Popular Searches</h4>
                 <div class="popular-searches">
@@ -425,7 +425,7 @@ class AdvancedSearch {
                     this.showSearchHistory();
                     return;
                 }
-                
+
                 const search = item.dataset.search;
                 document.getElementById('advancedSearchInput').value = search;
                 this.performSearch(search);
@@ -437,7 +437,7 @@ class AdvancedSearch {
     openSearch() {
         const searchOverlay = document.getElementById('searchOverlay');
         const searchInput = document.getElementById('advancedSearchInput');
-        
+
         searchOverlay.classList.add('active');
         document.body.style.overflow = 'hidden';
         setTimeout(() => searchInput.focus(), 100);
@@ -452,10 +452,10 @@ class AdvancedSearch {
 
     highlightText(text, query, maxLength = 200) {
         if (!text) return '';
-        
+
         let highlighted = text;
         const queryTerms = query.toLowerCase().split(' ');
-        
+
         queryTerms.forEach(term => {
             if (term.length > 1) {
                 const regex = new RegExp(`(${term})`, 'gi');
@@ -496,19 +496,19 @@ class AdvancedSearch {
 
     addToSearchHistory(query) {
         if (query.length < 2) return;
-        
+
         const index = this.searchHistory.indexOf(query);
         if (index > -1) {
             this.searchHistory.splice(index, 1);
         }
-        
+
         this.searchHistory.push(query);
-        
+
         // Keep only last 50 searches
         if (this.searchHistory.length > 50) {
             this.searchHistory.shift();
         }
-        
+
         localStorage.setItem('search_history', JSON.stringify(this.searchHistory));
     }
 
@@ -575,7 +575,7 @@ class AdvancedSearch {
         // Fallback search if no search index available
         const content = document.body.textContent.toLowerCase();
         const results = [];
-        
+
         if (content.includes(query.toLowerCase())) {
             results.push({
                 title: 'Current Page',
@@ -592,7 +592,7 @@ class AdvancedSearch {
         // Create a basic search index from current page content
         const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
         const paragraphs = document.querySelectorAll('p');
-        
+
         this.documents = [{
             id: 'current-page',
             title: document.title,
@@ -610,7 +610,7 @@ class AdvancedSearch {
             'Check your spelling',
             'Try more general terms'
         ];
-        
+
         return suggestions.map(s => `<p>${s}</p>`).join('');
     }
 }

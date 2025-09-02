@@ -23,7 +23,7 @@ class AIReadingExperience {
     // Smart reading mode with adaptive formatting
     setupSmartReadingMode() {
         const toggleBtn = this.createToggleButton('🧠', 'Smart Reading Mode', 'smart-reading');
-        
+
         toggleBtn.addEventListener('click', () => {
             document.body.classList.toggle('smart-reading-mode');
             this.adaptContentForReading();
@@ -54,7 +54,7 @@ class AIReadingExperience {
 
         // Add reading guides for long text
         this.addReadingGuides();
-        
+
         // Highlight important sentences
         this.highlightKeyContent();
     }
@@ -94,10 +94,10 @@ class AIReadingExperience {
             const scrolled = window.scrollY;
             const total = document.documentElement.scrollHeight - window.innerHeight;
             const progress = Math.min((scrolled / total) * 100, 100);
-            
+
             progressFill.style.width = `${progress}%`;
             progressPercentage.textContent = `${Math.round(progress)}%`;
-            
+
             const remainingTime = Math.ceil((totalTime * (100 - progress)) / 100);
             timeRemaining.textContent = remainingTime > 0 ? `${remainingTime} min left` : 'Almost done!';
         });
@@ -106,7 +106,7 @@ class AIReadingExperience {
     // Focus mode with distraction elimination
     setupFocusMode() {
         const focusBtn = this.createToggleButton('🎯', 'Focus Mode', 'focus-mode');
-        
+
         focusBtn.addEventListener('click', () => {
             document.body.classList.toggle('focus-mode');
             this.savePreference('focusMode', document.body.classList.contains('focus-mode'));
@@ -144,7 +144,7 @@ class AIReadingExperience {
     showHighlightOptions(selection) {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
-        
+
         const highlightMenu = document.createElement('div');
         highlightMenu.className = 'highlight-menu';
         highlightMenu.style.cssText = `
@@ -174,12 +174,12 @@ class AIReadingExperience {
                 cursor: pointer;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             `;
-            
+
             colorBtn.addEventListener('click', () => {
                 this.highlightSelection(selection, color);
                 highlightMenu.remove();
             });
-            
+
             highlightMenu.appendChild(colorBtn);
         });
 
@@ -196,10 +196,10 @@ class AIReadingExperience {
         const highlight = document.createElement('mark');
         highlight.style.backgroundColor = color;
         highlight.className = 'user-highlight';
-        
+
         try {
             range.surroundContents(highlight);
-            
+
             // Save highlight
             const highlights = JSON.parse(localStorage.getItem('reading_highlights') || '[]');
             highlights.push({
@@ -209,11 +209,11 @@ class AIReadingExperience {
                 position: this.getTextPosition(range)
             });
             localStorage.setItem('reading_highlights', JSON.stringify(highlights));
-            
+
         } catch (e) {
             console.warn('Could not highlight complex selection');
         }
-        
+
         selection.removeAllRanges();
     }
 
@@ -236,13 +236,13 @@ class AIReadingExperience {
 
             const text = this.extractReadableText(content);
             utterance = new SpeechSynthesisUtterance(text);
-            
+
             // Configure voice
             const voices = speechSynthesis.getVoices();
-            const preferredVoice = voices.find(voice => 
+            const preferredVoice = voices.find(voice =>
                 voice.lang.startsWith('en') && voice.name.includes('Natural')
             ) || voices.find(voice => voice.lang.startsWith('en'));
-            
+
             if (preferredVoice) utterance.voice = preferredVoice;
             utterance.rate = this.readingProfile.speechRate || 1;
             utterance.pitch = 1;
@@ -264,7 +264,7 @@ class AIReadingExperience {
     // AI-generated content summary
     addSmartSummary() {
         const summaryBtn = this.createToggleButton('📝', 'Smart Summary', 'summary');
-        
+
         summaryBtn.addEventListener('click', () => {
             this.generateSmartSummary();
         });
@@ -276,20 +276,20 @@ class AIReadingExperience {
 
         const text = content.textContent;
         const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20);
-        
+
         // Simple extractive summarization algorithm
         const summary = this.extractKeyPoints(sentences, text);
-        
+
         this.showSummaryModal(summary);
     }
 
     extractKeyPoints(sentences, fullText) {
         const words = fullText.toLowerCase().split(/\s+/);
         const wordFreq = {};
-        
+
         // Calculate word frequency (excluding common words)
         const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'can', 'may', 'might', 'must']);
-        
+
         words.forEach(word => {
             const cleanWord = word.replace(/[^\w]/g, '');
             if (cleanWord.length > 3 && !stopWords.has(cleanWord)) {
@@ -356,10 +356,10 @@ class AIReadingExperience {
                 if (entry.isIntersecting) {
                     const words = entry.target.textContent.split(/\s+/).length;
                     wordsRead += words;
-                    
+
                     const timeSpent = (Date.now() - startTime) / 1000 / 60; // minutes
                     const currentSpeed = Math.round(wordsRead / timeSpent);
-                    
+
                     if (timeSpent > 0.5) { // Only after 30 seconds
                         this.readingProfile.wordsPerMinute = currentSpeed;
                         this.saveReadingProfile();
@@ -385,7 +385,7 @@ class AIReadingExperience {
         button.innerHTML = icon;
         button.title = title;
         button.id = id;
-        
+
         toolbar.appendChild(button);
         return button;
     }
@@ -434,7 +434,7 @@ class AIReadingExperience {
             .smart-reading-mode p {
                 position: relative;
             }
-            
+
             .smart-reading-mode p:hover::before {
                 content: '';
                 position: absolute;
@@ -453,7 +453,7 @@ class AIReadingExperience {
     highlightKeyContent() {
         // Simple keyword highlighting
         const keywordPattern = /\b(important|key|crucial|essential|significant|note|warning|tip)\b/gi;
-        
+
         document.querySelectorAll('p').forEach(p => {
             if (p.textContent.match(keywordPattern)) {
                 p.style.background = 'linear-gradient(90deg, transparent 0%, rgba(108, 99, 255, 0.1) 50%, transparent 100%)';
@@ -467,11 +467,11 @@ class AIReadingExperience {
         // Adapt content based on user preferences and reading behavior
         const darkModePreference = window.matchMedia('(prefers-color-scheme: dark)');
         const reducedMotionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-        
+
         if (darkModePreference.matches && !document.documentElement.hasAttribute('data-theme')) {
             document.documentElement.setAttribute('data-theme', 'dark');
         }
-        
+
         if (reducedMotionPreference.matches) {
             document.body.classList.add('reduced-motion');
         }

@@ -13,7 +13,7 @@ class AdvancedAnalytics {
             scrollDepth: {},
             performance: {}
         };
-        
+
         this.init();
     }
 
@@ -32,7 +32,7 @@ class AdvancedAnalytics {
         window.addEventListener('load', () => {
             const nav = performance.getEntriesByType('navigation')[0];
             const paint = performance.getEntriesByType('paint');
-            
+
             this.sessionData.performance = {
                 loadTime: nav.loadEventEnd - nav.loadEventStart,
                 domComplete: nav.domComplete - nav.navigationStart,
@@ -49,12 +49,12 @@ class AdvancedAnalytics {
     trackScrollBehavior() {
         let scrollDepth = 0;
         let readingZones = new Map();
-        
+
         const throttledScroll = this.throttle(() => {
             const scrolled = window.scrollY;
             const total = document.documentElement.scrollHeight - window.innerHeight;
             const currentDepth = Math.round((scrolled / total) * 100);
-            
+
             if (currentDepth > scrollDepth) {
                 scrollDepth = currentDepth;
                 this.sessionData.scrollDepth[Date.now()] = currentDepth;
@@ -62,7 +62,7 @@ class AdvancedAnalytics {
 
             // Track reading zones (paragraphs, code blocks, etc.)
             this.trackVisibleContent();
-            
+
         }, 250);
 
         window.addEventListener('scroll', throttledScroll);
@@ -77,15 +77,15 @@ class AdvancedAnalytics {
         const wordCount = text.split(/\s+/).filter(word => word.length > 0).length;
         const codeBlocks = content.querySelectorAll('pre, code').length;
         const images = content.querySelectorAll('img').length;
-        
+
         // Advanced reading time calculation
         const wordsPerMinute = 200;
         const codeReadingFactor = 30; // seconds per code block
         const imageViewingTime = 12; // seconds per image
-        
+
         const estimatedTime = Math.ceil(
-            (wordCount / wordsPerMinute) + 
-            (codeBlocks * codeReadingFactor / 60) + 
+            (wordCount / wordsPerMinute) +
+            (codeBlocks * codeReadingFactor / 60) +
             (images * imageViewingTime / 60)
         );
 
@@ -122,7 +122,7 @@ class AdvancedAnalytics {
     // Track user interactions with micro-animations feedback
     trackInteractions() {
         const interactionEvents = ['click', 'dblclick', 'contextmenu', 'keydown'];
-        
+
         interactionEvents.forEach(event => {
             document.addEventListener(event, (e) => {
                 const interaction = {
@@ -136,7 +136,7 @@ class AdvancedAnalytics {
 
                 this.sessionData.interactions.push(interaction);
                 this.addInteractionRipple(e);
-                
+
                 // Send high-value interactions immediately
                 if (['click', 'dblclick'].includes(event)) {
                     this.sendAnalytics('interaction', interaction);
@@ -148,7 +148,7 @@ class AdvancedAnalytics {
     // Visual feedback for interactions
     addInteractionRipple(event) {
         if (event.type !== 'click') return;
-        
+
         const ripple = document.createElement('div');
         ripple.className = 'interaction-ripple';
         ripple.style.cssText = `
@@ -177,7 +177,7 @@ class AdvancedAnalytics {
                 if (entry.isIntersecting) {
                     const element = entry.target;
                     const type = this.getElementType(element);
-                    
+
                     this.sendAnalytics('content_view', {
                         type,
                         id: element.id,
@@ -256,18 +256,18 @@ class AdvancedAnalytics {
     // Heatmap generation for click tracking
     setupHeatmap() {
         const heatmapData = JSON.parse(localStorage.getItem('heatmap_data') || '[]');
-        
+
         document.addEventListener('click', (e) => {
             const x = Math.round((e.clientX / window.innerWidth) * 100);
             const y = Math.round((e.clientY / window.innerHeight) * 100);
-            
+
             heatmapData.push({ x, y, timestamp: Date.now() });
-            
+
             // Keep only last 1000 clicks
             if (heatmapData.length > 1000) {
                 heatmapData.splice(0, heatmapData.length - 1000);
             }
-            
+
             localStorage.setItem('heatmap_data', JSON.stringify(heatmapData));
         });
     }
@@ -305,12 +305,12 @@ class AdvancedAnalytics {
             url: window.location.href,
             userAgent: navigator.userAgent
         });
-        
+
         // Keep only last 500 events
         if (analyticsData.length > 500) {
             analyticsData.splice(0, analyticsData.length - 500);
         }
-        
+
         localStorage.setItem('analytics_data', JSON.stringify(analyticsData));
 
         // Send to external analytics service if configured
@@ -326,7 +326,7 @@ class AdvancedAnalytics {
             stored: JSON.parse(localStorage.getItem('analytics_data') || '[]'),
             heatmap: JSON.parse(localStorage.getItem('heatmap_data') || '[]')
         };
-        
+
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -365,7 +365,7 @@ document.head.appendChild(style);
 // Initialize analytics
 window.addEventListener('DOMContentLoaded', () => {
     window.BlogAnalytics = new AdvancedAnalytics();
-    
+
     // Add export functionality for development
     if (window.location.search.includes('analytics=true')) {
         const exportBtn = document.createElement('button');

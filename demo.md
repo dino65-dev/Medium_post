@@ -16,7 +16,7 @@ Welcome to our **advanced Jekyll blog** with cutting-edge features! This blog no
 - **Semantic Understanding**: AI-powered search suggestions
 - **Keyboard Shortcuts**: Press `Ctrl/Cmd + K` to open search
 
-### 🤖 **AI Reading Experience** 
+### 🤖 **AI Reading Experience**
 - **Smart Highlighting**: Automatic key concept highlighting
 - **Focus Mode**: Distraction-free reading environment
 - **Text-to-Speech**: Built-in speech synthesis
@@ -53,26 +53,26 @@ class MUONOptimizer:
         self.adaptive = adaptive
         self.velocity = {}
         self.squared_grads = {}
-    
+
     def update(self, params, gradients):
         """Update parameters using MUON algorithm"""
         for param_name, gradient in gradients.items():
             if param_name not in self.velocity:
                 self.velocity[param_name] = np.zeros_like(gradient)
                 self.squared_grads[param_name] = np.zeros_like(gradient)
-            
+
             # Adaptive momentum calculation
             if self.adaptive:
                 self.squared_grads[param_name] += gradient ** 2
                 adaptive_lr = self.lr / (np.sqrt(self.squared_grads[param_name]) + 1e-8)
             else:
                 adaptive_lr = self.lr
-            
+
             # Momentum update
-            self.velocity[param_name] = (self.momentum * self.velocity[param_name] - 
+            self.velocity[param_name] = (self.momentum * self.velocity[param_name] -
                                        adaptive_lr * gradient)
             params[param_name] += self.velocity[param_name]
-        
+
         return params
 ```
 
