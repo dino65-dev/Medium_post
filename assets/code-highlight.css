@@ -1,267 +1,477 @@
-/* ===== CODE BLOCK STYLING & LINE NUMBERING SYSTEM ===== */
+/* ===== IMPROVED CODE BLOCK STYLING & DYNAMIC LINE NUMBERING ===== */
 
 /* Base highlight container */
 .highlight {
-  background: var(--bg-secondary) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 8px !important;
-  padding: 0 !important;
-  margin: 1.2em 0 !important;
-  overflow: hidden !important;
-  color: var(--text-primary) !important;
-  position: relative !important;
-  font-size: 14px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  color: var(--text-primary);
+  position: relative;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
 }
 
 .highlight:hover {
-  box-shadow: 0 4px 16px var(--shadow-light) !important;
+  box-shadow: 0 4px 16px var(--shadow-light);
 }
 
 /* Pre element styling */
 .highlight pre {
-  background: transparent !important;
-  margin: 0 !important;
-  padding: 1em 1em 1em 4em !important;
-  border-radius: 0 !important;
-  color: var(--text-primary) !important;
-  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace !important;
-  font-size: inherit !important;
-  line-height: 1.5 !important;
-  tab-size: 4 !important;
-  white-space: pre !important;
-  word-wrap: normal !important;
-  overflow-x: auto !important;
-  counter-reset: line-numbering !important;
-  position: relative !important;
+  background: transparent;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0;
+  color: var(--text-primary);
+  font-family: 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', monospace;
+  font-size: inherit;
+  line-height: 1.6;
+  tab-size: 4;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-x: auto;
+  position: relative;
+  counter-reset: line-counter;
 }
 
 /* Code element styling */
 .highlight pre code {
-  font-family: inherit !important;
-  font-size: inherit !important;
-  color: inherit !important;
-  background: transparent !important;
-  padding: 0 !important;
-  display: block !important;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+  display: block;
+  position: relative;
 }
 
-/* CSS-based line numbering system */
-.highlight pre code::before {
-  content: "1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 10\A 11\A 12\A 13\A 14\A 15\A 16\A 17\A 18\A 19\A 20\A 21\A 22\A 23\A 24\A 25\A 26\A 27\A 28\A 29\A 30\A 31\A 32\A 33\A 34\A 35\A 36\A 37\A 38\A 39\A 40\A 41\A 42\A 43\A 44\A 45\A 46\A 47\A 48\A 49\A 50\A 51\A 52\A 53\A 54\A 55\A 56\A 57\A 58\A 59\A 60" !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 1em !important;
-  width: 3.5em !important;
-  text-align: right !important;
-  color: var(--text-secondary) !important;
-  font-size: 12px !important;
-  font-family: inherit !important;
-  user-select: none !important;
-  opacity: 0.7 !important;
-  padding-right: 0.5em !important;
-  background: var(--bg-secondary) !important;
-  line-height: 1.5 !important;
-  white-space: pre !important;
-  pointer-events: none !important;
-  border-right: 1px solid var(--border-color) !important;
+/* Dynamic line numbering system using CSS counters */
+.highlight pre code .line {
+  display: block;
+  position: relative;
+  padding-left: 4rem;
+  counter-increment: line-counter;
+}
+
+.highlight pre code .line::before {
+  content: counter(line-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 3rem;
+  text-align: right;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: inherit;
+  user-select: none;
+  opacity: 0.6;
+  padding-right: 1rem;
+  pointer-events: none;
+  border-right: 1px solid var(--border-color);
+  margin-right: 1rem;
 }
 
 /* Copy button for code blocks */
-.highlight::before {
+.highlight::after {
   content: "📋 Copy";
-  position: absolute !important;
-  top: 8px !important;
-  right: 8px !important;
-  background: var(--bg-primary) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 4px !important;
-  padding: 4px 8px !important;
-  font-size: 11px !important;
-  font-weight: 500 !important;
-  cursor: pointer !important;
-  opacity: 0 !important;
-  transition: all 0.2s ease !important;
-  z-index: 10 !important;
-  color: var(--text-secondary) !important;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10;
+  color: var(--text-secondary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-.highlight:hover::before {
-  opacity: 1 !important;
+.highlight:hover::after {
+  opacity: 1;
 }
 
-.highlight::before:hover {
-  background: var(--hover-bg) !important;
-  color: var(--accent-color) !important;
-  transform: scale(1.05) !important;
+.highlight::after:hover {
+  background: var(--hover-bg);
+  color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Theme-specific line number colors */
-:root[data-theme="light"] .highlight pre code::before {
-  color: #6b7280 !important;
-  background: #f9fafb !important;
-  border-right-color: #e5e7eb !important;
+/* Fallback for browsers that don't support CSS counters */
+.highlight pre code:not(.line-numbered) {
+  padding-left: 1rem;
 }
 
-:root[data-theme="dark"] .highlight pre code::before {
-  color: #9ca3af !important;
-  background: #1f2937 !important;
-  border-right-color: #374151 !important;
+/* Alternative line numbering for Jekyll highlight tags */
+.highlight .lineno {
+  color: var(--text-secondary);
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.6;
+  padding-right: 1rem;
+  border-right: 1px solid var(--border-color);
+  margin-right: 1rem;
+  font-size: 0.85em;
 }
 
-/* Mobile responsiveness */
+/* Theme-specific enhancements */
+:root[data-theme="light"] .highlight {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .highlight pre code .line::before {
+  color: #64748b;
+  border-right-color: #e2e8f0;
+}
+
+:root[data-theme="light"] .highlight::after {
+  background: #ffffff;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+
+:root[data-theme="dark"] .highlight {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+:root[data-theme="dark"] .highlight pre code .line::before {
+  color: #64748b;
+  border-right-color: #334155;
+}
+
+:root[data-theme="dark"] .highlight::after {
+  background: #1e293b;
+  border-color: #475569;
+  color: #94a3b8;
+}
+
+/* Responsive design improvements */
 @media (max-width: 768px) {
+  .highlight {
+    margin: 1rem 0;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
   .highlight pre {
-    padding: 1em 0.5em 1em 3em !important;
-    font-size: 12px !important;
+    padding: 0.75rem;
   }
 
-  .highlight pre code::before {
-    width: 2.5em !important;
-    font-size: 10px !important;
+  .highlight pre code .line {
+    padding-left: 3rem;
   }
 
-  .highlight::before {
-    font-size: 9px !important;
-    padding: 2px 4px !important;
+  .highlight pre code .line::before {
+    width: 2.5rem;
+    font-size: 0.8em;
+    padding-right: 0.75rem;
+  }
+
+  .highlight::after {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+    top: 0.4rem;
+    right: 0.4rem;
   }
 }
 
 @media (max-width: 480px) {
-  .highlight pre {
-    padding: 0.8em 0.3em 0.8em 2.5em !important;
-    font-size: 11px !important;
+  .highlight {
+    font-size: 12px;
+    margin: 0.75rem 0;
   }
 
-  .highlight pre code::before {
-    width: 2em !important;
-    font-size: 9px !important;
-    padding-right: 0.3em !important;
+  .highlight pre {
+    padding: 0.5rem;
+  }
+
+  .highlight pre code .line {
+    padding-left: 2.5rem;
+  }
+
+  .highlight pre code .line::before {
+    width: 2rem;
+    font-size: 0.75em;
+    padding-right: 0.5rem;
+  }
+
+  .highlight::after {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.3rem;
   }
 }
 
-/* Syntax highlighting colors for light theme */
-:root[data-theme="light"] .highlight .hll { background-color: #fef3c7; }
-:root[data-theme="light"] .highlight .c { color: #6b7280; font-style: italic; } /* Comment */
-:root[data-theme="light"] .highlight .err { color: #dc2626; background-color: #fef2f2; } /* Error */
-:root[data-theme="light"] .highlight .k { color: #1e40af; font-weight: bold; } /* Keyword */
-:root[data-theme="light"] .highlight .o { color: #1f2937; font-weight: bold; } /* Operator */
-:root[data-theme="light"] .highlight .cm { color: #6b7280; font-style: italic; } /* Comment.Multiline */
-:root[data-theme="light"] .highlight .cp { color: #374151; font-weight: bold; } /* Comment.Preproc */
-:root[data-theme="light"] .highlight .c1 { color: #6b7280; font-style: italic; } /* Comment.Single */
-:root[data-theme="light"] .highlight .cs { color: #374151; font-weight: bold; font-style: italic; } /* Comment.Special */
-:root[data-theme="light"] .highlight .gd { color: #1f2937; background-color: #fee2e2; } /* Generic.Deleted */
-:root[data-theme="light"] .highlight .ge { font-style: italic; } /* Generic.Emph */
-:root[data-theme="light"] .highlight .gr { color: #dc2626; } /* Generic.Error */
-:root[data-theme="light"] .highlight .gh { color: #374151; } /* Generic.Heading */
-:root[data-theme="light"] .highlight .gi { color: #1f2937; background-color: #dcfce7; } /* Generic.Inserted */
-:root[data-theme="light"] .highlight .go { color: #6b7280; } /* Generic.Output */
-:root[data-theme="light"] .highlight .gp { color: #374151; } /* Generic.Prompt */
-:root[data-theme="light"] .highlight .gs { font-weight: bold; } /* Generic.Strong */
-:root[data-theme="light"] .highlight .gu { color: #6b7280; } /* Generic.Subheading */
-:root[data-theme="light"] .highlight .gt { color: #dc2626; } /* Generic.Traceback */
-:root[data-theme="light"] .highlight .kc { color: #1e40af; font-weight: bold; } /* Keyword.Constant */
-:root[data-theme="light"] .highlight .kd { color: #1e40af; font-weight: bold; } /* Keyword.Declaration */
-:root[data-theme="light"] .highlight .kn { color: #1e40af; font-weight: bold; } /* Keyword.Namespace */
-:root[data-theme="light"] .highlight .kp { color: #1e40af; font-weight: bold; } /* Keyword.Pseudo */
-:root[data-theme="light"] .highlight .kr { color: #1e40af; font-weight: bold; } /* Keyword.Reserved */
-:root[data-theme="light"] .highlight .kt { color: #059669; font-weight: bold; } /* Keyword.Type */
-:root[data-theme="light"] .highlight .m { color: #0891b2; } /* Literal.Number */
-:root[data-theme="light"] .highlight .s { color: #dc2626; } /* Literal.String */
-:root[data-theme="light"] .highlight .na { color: #059669; } /* Name.Attribute */
-:root[data-theme="light"] .highlight .nb { color: #1e40af; } /* Name.Builtin */
-:root[data-theme="light"] .highlight .nc { color: #059669; font-weight: bold; } /* Name.Class */
-:root[data-theme="light"] .highlight .no { color: #dc2626; } /* Name.Constant */
-:root[data-theme="light"] .highlight .nd { color: #7c3aed; } /* Name.Decorator */
-:root[data-theme="light"] .highlight .ni { color: #0891b2; } /* Name.Entity */
-:root[data-theme="light"] .highlight .ne { color: #dc2626; font-weight: bold; } /* Name.Exception */
-:root[data-theme="light"] .highlight .nf { color: #7c3aed; font-weight: bold; } /* Name.Function */
-:root[data-theme="light"] .highlight .nl { color: #7c3aed; } /* Name.Label */
-:root[data-theme="light"] .highlight .nn { color: #059669; font-weight: bold; } /* Name.Namespace */
-:root[data-theme="light"] .highlight .nt { color: #059669; font-weight: bold; } /* Name.Tag */
-:root[data-theme="light"] .highlight .nv { color: #7c3aed; } /* Name.Variable */
-:root[data-theme="light"] .highlight .ow { color: #1e40af; font-weight: bold; } /* Operator.Word */
-:root[data-theme="light"] .highlight .w { color: #1f2937; } /* Text.Whitespace */
-:root[data-theme="light"] .highlight .mf { color: #0891b2; } /* Literal.Number.Float */
-:root[data-theme="light"] .highlight .mh { color: #0891b2; } /* Literal.Number.Hex */
-:root[data-theme="light"] .highlight .mi { color: #0891b2; } /* Literal.Number.Integer */
-:root[data-theme="light"] .highlight .mo { color: #0891b2; } /* Literal.Number.Oct */
-:root[data-theme="light"] .highlight .sb { color: #dc2626; } /* Literal.String.Backtick */
-:root[data-theme="light"] .highlight .sc { color: #dc2626; } /* Literal.String.Char */
-:root[data-theme="light"] .highlight .sd { color: #6b7280; font-style: italic; } /* Literal.String.Doc */
-:root[data-theme="light"] .highlight .s2 { color: #dc2626; } /* Literal.String.Double */
-:root[data-theme="light"] .highlight .se { color: #dc2626; } /* Literal.String.Escape */
-:root[data-theme="light"] .highlight .sh { color: #dc2626; } /* Literal.String.Herald */
-:root[data-theme="light"] .highlight .si { color: #dc2626; } /* Literal.String.Interpol */
-:root[data-theme="light"] .highlight .sx { color: #dc2626; } /* Literal.String.Other */
-:root[data-theme="light"] .highlight .sr { color: #0891b2; } /* Literal.String.Regex */
-:root[data-theme="light"] .highlight .s1 { color: #dc2626; } /* Literal.String.Single */
-:root[data-theme="light"] .highlight .ss { color: #7c3aed; } /* Literal.String.Symbol */
-:root[data-theme="light"] .highlight .bp { color: #6b7280; } /* Name.Builtin.Pseudo */
-:root[data-theme="light"] .highlight .vc { color: #7c3aed; } /* Name.Variable.Class */
-:root[data-theme="light"] .highlight .vg { color: #7c3aed; } /* Name.Variable.Global */
-:root[data-theme="light"] .highlight .vi { color: #7c3aed; } /* Name.Variable.Instance */
-:root[data-theme="light"] .highlight .il { color: #0891b2; } /* Literal.Number.Integer.Long */
+/* Print styles */
+@media print {
+  .highlight {
+    border: 1px solid #000;
+    box-shadow: none;
+  }
 
-/* Syntax highlighting colors for dark theme */
-:root[data-theme="dark"] .highlight .hll { background-color: #374151; }
-:root[data-theme="dark"] .highlight .c { color: #9ca3af; font-style: italic; } /* Comment */
-:root[data-theme="dark"] .highlight .err { color: #f87171; background-color: #451a1a; } /* Error */
-:root[data-theme="dark"] .highlight .k { color: #60a5fa; font-weight: bold; } /* Keyword */
-:root[data-theme="dark"] .highlight .o { color: #f3f4f6; font-weight: bold; } /* Operator */
-:root[data-theme="dark"] .highlight .cm { color: #9ca3af; font-style: italic; } /* Comment.Multiline */
-:root[data-theme="dark"] .highlight .cp { color: #d1d5db; font-weight: bold; } /* Comment.Preproc */
-:root[data-theme="dark"] .highlight .c1 { color: #9ca3af; font-style: italic; } /* Comment.Single */
-:root[data-theme="dark"] .highlight .cs { color: #d1d5db; font-weight: bold; font-style: italic; } /* Comment.Special */
-:root[data-theme="dark"] .highlight .gd { color: #f3f4f6; background-color: #451a1a; } /* Generic.Deleted */
-:root[data-theme="dark"] .highlight .ge { font-style: italic; } /* Generic.Emph */
-:root[data-theme="dark"] .highlight .gr { color: #f87171; } /* Generic.Error */
-:root[data-theme="dark"] .highlight .gh { color: #d1d5db; } /* Generic.Heading */
-:root[data-theme="dark"] .highlight .gi { color: #f3f4f6; background-color: #065f46; } /* Generic.Inserted */
-:root[data-theme="dark"] .highlight .go { color: #9ca3af; } /* Generic.Output */
-:root[data-theme="dark"] .highlight .gp { color: #d1d5db; } /* Generic.Prompt */
-:root[data-theme="dark"] .highlight .gs { font-weight: bold; } /* Generic.Strong */
-:root[data-theme="dark"] .highlight .gu { color: #9ca3af; } /* Generic.Subheading */
-:root[data-theme="dark"] .highlight .gt { color: #f87171; } /* Generic.Traceback */
-:root[data-theme="dark"] .highlight .kc { color: #60a5fa; font-weight: bold; } /* Keyword.Constant */
-:root[data-theme="dark"] .highlight .kd { color: #60a5fa; font-weight: bold; } /* Keyword.Declaration */
-:root[data-theme="dark"] .highlight .kn { color: #60a5fa; font-weight: bold; } /* Keyword.Namespace */
-:root[data-theme="dark"] .highlight .kp { color: #60a5fa; font-weight: bold; } /* Keyword.Pseudo */
-:root[data-theme="dark"] .highlight .kr { color: #60a5fa; font-weight: bold; } /* Keyword.Reserved */
-:root[data-theme="dark"] .highlight .kt { color: #10b981; font-weight: bold; } /* Keyword.Type */
-:root[data-theme="dark"] .highlight .m { color: #06b6d4; } /* Literal.Number */
-:root[data-theme="dark"] .highlight .s { color: #f87171; } /* Literal.String */
-:root[data-theme="dark"] .highlight .na { color: #10b981; } /* Name.Attribute */
-:root[data-theme="dark"] .highlight .nb { color: #60a5fa; } /* Name.Builtin */
-:root[data-theme="dark"] .highlight .nc { color: #10b981; font-weight: bold; } /* Name.Class */
-:root[data-theme="dark"] .highlight .no { color: #f87171; } /* Name.Constant */
-:root[data-theme="dark"] .highlight .nd { color: #a78bfa; } /* Name.Decorator */
-:root[data-theme="dark"] .highlight .ni { color: #06b6d4; } /* Name.Entity */
-:root[data-theme="dark"] .highlight .ne { color: #f87171; font-weight: bold; } /* Name.Exception */
-:root[data-theme="dark"] .highlight .nf { color: #a78bfa; font-weight: bold; } /* Name.Function */
-:root[data-theme="dark"] .highlight .nl { color: #a78bfa; } /* Name.Label */
-:root[data-theme="dark"] .highlight .nn { color: #10b981; font-weight: bold; } /* Name.Namespace */
-:root[data-theme="dark"] .highlight .nt { color: #10b981; font-weight: bold; } /* Name.Tag */
-:root[data-theme="dark"] .highlight .nv { color: #a78bfa; } /* Name.Variable */
-:root[data-theme="dark"] .highlight .ow { color: #60a5fa; font-weight: bold; } /* Operator.Word */
-:root[data-theme="dark"] .highlight .w { color: #f3f4f6; } /* Text.Whitespace */
-:root[data-theme="dark"] .highlight .mf { color: #06b6d4; } /* Literal.Number.Float */
-:root[data-theme="dark"] .highlight .mh { color: #06b6d4; } /* Literal.Number.Hex */
-:root[data-theme="dark"] .highlight .mi { color: #06b6d4; } /* Literal.Number.Integer */
-:root[data-theme="dark"] .highlight .mo { color: #06b6d4; } /* Literal.Number.Oct */
-:root[data-theme="dark"] .highlight .sb { color: #f87171; } /* Literal.String.Backtick */
-:root[data-theme="dark"] .highlight .sc { color: #f87171; } /* Literal.String.Char */
-:root[data-theme="dark"] .highlight .sd { color: #9ca3af; font-style: italic; } /* Literal.String.Doc */
-:root[data-theme="dark"] .highlight .s2 { color: #f87171; } /* Literal.String.Double */
-:root[data-theme="dark"] .highlight .se { color: #f87171; } /* Literal.String.Escape */
-:root[data-theme="dark"] .highlight .sh { color: #f87171; } /* Literal.String.Herald */
-:root[data-theme="dark"] .highlight .si { color: #f87171; } /* Literal.String.Interpol */
-:root[data-theme="dark"] .highlight .sx { color: #f87171; } /* Literal.String.Other */
-:root[data-theme="dark"] .highlight .sr { color: #06b6d4; } /* Literal.String.Regex */
-:root[data-theme="dark"] .highlight .s1 { color: #f87171; } /* Literal.String.Single */
-:root[data-theme="dark"] .highlight .ss { color: #a78bfa; } /* Literal.String.Symbol */
-:root[data-theme="dark"] .highlight .bp { color: #9ca3af; } /* Name.Builtin.Pseudo */
-:root[data-theme="dark"] .highlight .vc { color: #a78bfa; } /* Name.Variable.Class */
-:root[data-theme="dark"] .highlight .vg { color: #a78bfa; } /* Name.Variable.Global */
-:root[data-theme="dark"] .highlight .vi { color: #a78bfa; } /* Name.Variable.Instance */
-:root[data-theme="dark"] .highlight .il { color: #06b6d4; } /* Literal.Number.Integer.Long */
+  .highlight::after {
+    display: none;
+  }
+
+  .highlight pre code .line::before {
+    color: #666;
+  }
+}
+
+/* ===== IMPROVED SYNTAX HIGHLIGHTING COLORS ===== */
+
+/* Light theme syntax highlighting */
+:root[data-theme="light"] .highlight {
+  /* Comments */
+  .c, .cm, .c1, .cs { color: #6b7280; font-style: italic; }
+
+  /* Errors */
+  .err { color: #dc2626; background-color: rgba(220, 38, 38, 0.1); }
+
+  /* Keywords */
+  .k, .kc, .kd, .kn, .kp, .kr { color: #1e40af; font-weight: 600; }
+  .kt { color: #059669; font-weight: 600; }
+
+  /* Operators */
+  .o, .ow { color: #1f2937; font-weight: 500; }
+
+  /* Strings */
+  .s, .sb, .sc, .s2, .se, .sh, .si, .sx, .s1 { color: #dc2626; }
+  .sd { color: #6b7280; font-style: italic; }
+  .sr { color: #0891b2; }
+  .ss { color: #7c3aed; }
+
+  /* Numbers */
+  .m, .mf, .mh, .mi, .mo, .il { color: #0891b2; }
+
+  /* Names */
+  .na { color: #059669; }
+  .nb, .bp { color: #1e40af; }
+  .nc { color: #059669; font-weight: 600; }
+  .no { color: #dc2626; }
+  .nd { color: #7c3aed; }
+  .ni { color: #0891b2; }
+  .ne { color: #dc2626; font-weight: 600; }
+  .nf { color: #7c3aed; font-weight: 600; }
+  .nl { color: #7c3aed; }
+  .nn { color: #059669; font-weight: 600; }
+  .nt { color: #059669; font-weight: 600; }
+  .nv, .vc, .vg, .vi { color: #7c3aed; }
+
+  /* Generic */
+  .gd { color: #1f2937; background-color: rgba(220, 38, 38, 0.1); }
+  .ge { font-style: italic; }
+  .gr, .gt { color: #dc2626; }
+  .gh { color: #374151; font-weight: 600; }
+  .gi { color: #1f2937; background-color: rgba(5, 150, 105, 0.1); }
+  .go { color: #6b7280; }
+  .gp { color: #374151; font-weight: 500; }
+  .gs { font-weight: 600; }
+  .gu { color: #6b7280; font-weight: 600; }
+
+  /* Highlighted line */
+  .hll { background-color: rgba(251, 191, 36, 0.2); }
+
+  /* Whitespace */
+  .w { color: #1f2937; }
+}
+
+/* Dark theme syntax highlighting */
+:root[data-theme="dark"] .highlight {
+  /* Comments */
+  .c, .cm, .c1, .cs { color: #9ca3af; font-style: italic; }
+
+  /* Errors */
+  .err { color: #f87171; background-color: rgba(248, 113, 113, 0.1); }
+
+  /* Keywords */
+  .k, .kc, .kd, .kn, .kp, .kr { color: #60a5fa; font-weight: 600; }
+  .kt { color: #10b981; font-weight: 600; }
+
+  /* Operators */
+  .o, .ow { color: #f3f4f6; font-weight: 500; }
+
+  /* Strings */
+  .s, .sb, .sc, .s2, .se, .sh, .si, .sx, .s1 { color: #fbbf24; }
+  .sd { color: #9ca3af; font-style: italic; }
+  .sr { color: #06b6d4; }
+  .ss { color: #a78bfa; }
+
+  /* Numbers */
+  .m, .mf, .mh, .mi, .mo, .il { color: #06b6d4; }
+
+  /* Names */
+  .na { color: #10b981; }
+  .nb, .bp { color: #60a5fa; }
+  .nc { color: #10b981; font-weight: 600; }
+  .no { color: #f87171; }
+  .nd { color: #a78bfa; }
+  .ni { color: #06b6d4; }
+  .ne { color: #f87171; font-weight: 600; }
+  .nf { color: #a78bfa; font-weight: 600; }
+  .nl { color: #a78bfa; }
+  .nn { color: #10b981; font-weight: 600; }
+  .nt { color: #10b981; font-weight: 600; }
+  .nv, .vc, .vg, .vi { color: #a78bfa; }
+
+  /* Generic */
+  .gd { color: #f3f4f6; background-color: rgba(248, 113, 113, 0.1); }
+  .ge { font-style: italic; }
+  .gr, .gt { color: #f87171; }
+  .gh { color: #d1d5db; font-weight: 600; }
+  .gi { color: #f3f4f6; background-color: rgba(16, 185, 129, 0.1); }
+  .go { color: #9ca3af; }
+  .gp { color: #d1d5db; font-weight: 500; }
+  .gs { font-weight: 600; }
+  .gu { color: #9ca3af; font-weight: 600; }
+
+  /* Highlighted line */
+  .hll { background-color: rgba(55, 65, 81, 0.5); }
+
+  /* Whitespace */
+  .w { color: #f3f4f6; }
+}
+
+/* ===== ADDITIONAL ENHANCEMENTS ===== */
+
+/* Focus and accessibility improvements */
+.highlight {
+  scroll-margin-top: 2rem;
+}
+
+.highlight:focus-within {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Code block language labels */
+.highlight[data-lang]::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--accent-color);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 5;
+}
+
+/* Scrollbar styling for code blocks */
+.highlight pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.highlight pre::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+}
+
+.highlight pre::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.highlight pre::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Selection styling within code blocks */
+.highlight pre code::selection,
+.highlight pre code *::selection {
+  background: var(--accent-color);
+  color: white;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .highlight {
+    border-width: 2px;
+  }
+
+  .highlight pre code .line::before {
+    border-right-width: 2px;
+    opacity: 1;
+  }
+
+  :root[data-theme="light"] .highlight {
+    background: #ffffff;
+    border-color: #000000;
+  }
+
+  :root[data-theme="dark"] .highlight {
+    background: #000000;
+    border-color: #ffffff;
+  }
+}
+
+/* Animation for copy feedback */
+@keyframes copySuccess {
+  0% { content: "📋 Copy"; }
+  50% { content: "✅ Copied!"; transform: scale(1.1); }
+  100% { content: "📋 Copy"; transform: scale(1); }
+}
+
+.highlight.copied::after {
+  animation: copySuccess 2s ease-in-out;
+  background: var(--success-color, #10b981);
+  color: white;
+}
+
+/* RTL support */
+[dir="rtl"] .highlight pre code .line {
+  padding-left: 1rem;
+  padding-right: 4rem;
+}
+
+[dir="rtl"] .highlight pre code .line::before {
+  left: auto;
+  right: 0;
+  text-align: left;
+  border-right: none;
+  border-left: 1px solid var(--border-color);
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+[dir="rtl"] .highlight::after {
+  right: auto;
+  left: 0.5rem;
+}
+
+/* Performance optimizations */
+.highlight {
+  contain: layout style paint;
+  will-change: box-shadow;
+}
+
+.highlight pre {
+  contain: layout style;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .highlight,
+  .highlight::after {
+    transition: none;
+  }
+
+  .highlight.copied::after {
+    animation: none;
+  }
+}
